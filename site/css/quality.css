@@ -1,0 +1,23 @@
+/* Quality & Dispatch — checklists, approvals, dispatch queue. */
+
+.check-head { padding: 14px 16px; border-bottom: 1px solid #e3e8ed; }
+.progress { margin-top: 10px; background: var(--hair); border-radius: 3px; overflow: hidden; height: 6px; }
+.progress__fill { display: block; height: 6px; background: var(--ok); transition: width .25s ease; }
+
+.check {
+  display: flex; align-items: center; gap: 11px; padding: 12px 15px;
+  border-top: 1px solid var(--hair); cursor: pointer;
+}
+.check.is-done { background: #f6fbf8; }
+.check__box {
+  flex: none; width: 19px; height: 19px; border-radius: var(--r-sm); border: 2px solid #c0c9d2;
+  background: var(--card); color: #fff; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.check.is-done .check__box { border-color: var(--ok); background: var(--ok); }
+.check__label { font-size: 13px; color: #2c3945; }
+.check.is-done .check__label { color: #5b7c6a; text-decoration: line-through; }
+
+.dispatch-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-top: 1px solid var(--hair); }
+.dispatch-row__when { flex: none; width: 62px; font-size: 12px; color: #6f6558; }
+.dispatch-row__what { flex: 1; min-width: 0; font-size: 13px; font-weight: 600; }

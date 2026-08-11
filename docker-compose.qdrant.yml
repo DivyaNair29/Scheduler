@@ -1,0 +1,17 @@
+# Qdrant vector DB for the assistant's memory.
+# Run alongside your existing Postgres:  docker compose -f docker-compose.qdrant.yml up -d
+# The app connects at QDRANT_URL (default http://localhost:6333).
+# If this isn't running, the assistant simply works without memory — no errors.
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.9.0
+    container_name: meridian_qdrant
+    ports:
+      - "6333:6333"   # REST/gRPC API
+      - "6334:6334"   # gRPC
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+volumes:
+  qdrant_data:

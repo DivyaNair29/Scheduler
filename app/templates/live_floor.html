@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Live Floor · Meridian{% endblock %}
+{% block content %}
+<div class="page">
+  <div class="page__head">
+    <div>
+      <h1 class="h1">Live Floor · Manufacturing &rarr; Dispatch</h1>
+      <p class="muted">sensor &rarr; electronics &rarr; assembly &rarr; calibration &rarr; burn-in &rarr; final QC &rarr; documentation &rarr; packing &rarr; shipping &amp; dispatch</p>
+    </div>
+  </div>
+
+  <div class="gantt">
+    <div class="gantt__ruler">
+      {% for h in range(0, 24, 2) %}<span class="gantt__tick">{{ '%02d:00'|format(h) }}</span>{% endfor %}
+    </div>
+
+    {% for l in lines %}
+      <div class="gantt__row">
+        <div class="gantt__label">
+          <span class="swatch" style="background: {{ l.color }}"></span>
+          <span>{{ l.name }}</span>
+          <span class="muted sm">{{ l.code }}</span>
+        </div>
+        <div class="gantt__track">
+          {% for o in l.orders %}
+            <div class="block {{ 'block--risk' if o.status == 'AT RISK' }}"
+                 style="left: {{ (o.start_min / 1440 * 100)|round(2) }}%;
+                        width: {{ (o.duration_min / 1440 * 100)|round(2) }}%;
+                        background: {{ l.color }}">
+              <span class="mono b">{{ o.code }}</span>
+              <span class="block__sub">{{ o.current_stage }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+
+    {% for d in downstream %}
+      <div class="gantt__row gantt__row--wc">
+        <div class="gantt__label">
+          <span class="swatch swatch--q"></span>
+          <span>{{ d.name }}</span>
+        </div>
+        <div class="gantt__track">
+          {% for o in d.orders %}
+            <div class="block block--q" style="left: {{ (o.start_min / 1440 * 100)|round(2) }}%; width: {{ (o.duration_min / 1440 * 100)|round(2) }}%">
+              <span class="mono b">{{ o.code }}</span>
+              <span class="block__sub">{{ o.current_stage }}</span>
+            </div>
+          {% else %}
+            <span class="gantt__idle">no work at this stage</span>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if applied %}
+    <section class="card card--rail card--rail-ok">
+      <h2 class="card__label ok">APPROVED CONSTRAINTS IN EFFECT</h2>
+      {% for c in applied %}
+        <div class="row row--top">
+          <span class="tick">&#10003;</span>
+          <div>
+            <div class="b">{{ c.ctype }} · {{ c.order_code }} · {{ c.stage }}</div>
+            <p class="muted sm">{{ c.note }}</p>
+          </div>
+          <span class="mono muted sm push">{{ c.raised_by }}</span>
+        </div>
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  {% if confirmations %}
+    <section class="card">
+      <h2 class="card__label">SHOP-FLOOR CONFIRMATIONS TODAY</h2>
+      <div class="row gap wrap">
+        {% for f in confirmations %}
+          <span class="pill">&#10003; <span class="mono b">{{ f.order_code }}</span> {{ f.item }} <span class="muted">{{ f.operator }}</span></span>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="card card--rail card--rail-info">
+    <h2 class="card__label info">FLOOR INSIGHTS</h2>
+    <p class="muted sm">machine usage, order moves &amp; splits to protect delivery dates</p>
+    <div class="grid grid--3">
+      {% for i in insights %}
+        <article class="mini">
+          <div class="row">
+            <span class="tag tag--info">{{ i.kind }}</span>
+            <span class="mono muted sm">{{ i.ref }}</span>
+          </div>
+          <div class="mini__title">{{ i.title }}</div>
+          <p class="mini__body">{{ i.detail }}</p>
+          <span class="gain gain--info">{{ i.gain }}</span>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

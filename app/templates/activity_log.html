@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Activity Log · Meridian{% endblock %}
+{% block content %}
+<div class="page page--mid">
+  <div class="page__head">
+    <div>
+      <h1 class="h1">Activity Log</h1>
+      <p class="muted">Every change and confirmation on the system — who did it, when, and why. {{ counts['all'] }} events captured.</p>
+    </div>
+  </div>
+
+  <div class="row gap wrap filters">
+    {% for k in kinds %}
+      <a class="filter {{ 'is-on' if k == active_kind }}" href="{{ url_for('activity_log', kind=k) }}">
+        {{ 'All events' if k == 'all' else k|capitalize }}<span>{{ counts[k] }}</span>
+      </a>
+    {% endfor %}
+  </div>
+
+  <div class="card card--flush">
+    <div class="loghead">
+      <span class="loghead__kind">TYPE</span>
+      <span class="grow">EVENT</span>
+      <span class="loghead__actor">ACTOR</span>
+      <span class="loghead__when">WHEN</span>
+    </div>
+    {% for e in events %}
+      <div class="logrow logrow--{{ e.kind }}">
+        <span class="kind kind--{{ e.kind }}">{{ e.kind|upper }}</span>
+        <div class="grow">
+          <div class="b">{{ e.title }}</div>
+          {% if e.detail %}<p class="muted sm">{{ e.detail }}</p>{% endif %}
+        </div>
+        <div class="logrow__actor">
+          <div class="sm">{{ e.actor }}</div>
+          <div class="muted xs">{{ e.role }}</div>
+        </div>
+        <span class="mono muted xs logrow__when">{{ e.ts.strftime('%d %b %H:%M') }}</span>
+      </div>
+    {% else %}
+      <p class="empty">No events of this type yet.</p>
+    {% endfor %}
+  </div>
+  <p class="muted sm">Log entries are append-only. Constraint, approval and schedule events carry the full decision chain including rejected revisions.</p>
+</div>
+{% endblock %}

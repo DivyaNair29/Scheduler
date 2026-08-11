@@ -1,0 +1,52 @@
+<nav class="sidebar">
+  <div class="brand">
+    <div class="brand__mark">M</div>
+    <div>
+      <div class="brand__name">MERIDIAN INSTRUMENTS</div>
+      <div class="brand__sub">AI Production Scheduler</div>
+    </div>
+  </div>
+
+  {% set nav_main = [('dashboard','Dashboard',''), ('live_floor','Live Floor','head'), ('orders','Orders','')] %}
+  <div class="nav">
+    <a class="nav__item {{ 'is-active' if nav_active in ('dashboard','employee_dashboard') }}"
+       href="{{ url_for('dashboard') if user.can_write else url_for('employee_dashboard') }}">Dashboard</a>
+    {% if user.can_write %}
+      <a class="nav__item {{ 'is-active' if nav_active == 'live_floor' }}" href="{{ url_for('live_floor') }}">Live Floor</a>
+    {% endif %}
+    <a class="nav__item {{ 'is-active' if nav_active == 'orders' }}" href="{{ url_for('orders') }}">Orders<span class="nav__badge">{{ order_count }}</span></a>
+    {% if user.can_write %}
+      <a class="nav__item {{ 'is-active' if nav_active == 'manpower' }}" href="{{ url_for('manpower') }}">Manpower</a>
+    {% endif %}
+
+    <div class="nav__head">WORKFLOW</div>
+    {% if user.can_write %}
+      <a class="nav__item {{ 'is-active' if nav_active == 'confirmations' }}" href="{{ url_for('confirmations') }}">Stage Confirmation{% if pending_approvals %}<span class="nav__badge">{{ pending_approvals }}</span>{% endif %}</a>
+    {% else %}
+      <a class="nav__item {{ 'is-active' if nav_active == 'employee_confirmations' }}" href="{{ url_for('employee_confirmations') }}">My Confirmations</a>
+    {% endif %}
+
+    {% if user.can_write %}
+      <div class="nav__divider"></div>
+      <a class="nav__item {{ 'is-active' if nav_active == 'activity_log' }}" href="{{ url_for('activity_log') }}">Activity Log<span class="nav__badge">{{ log_count }}</span></a>
+      <a class="nav__item {{ 'is-active' if nav_active == 'reports' }}" href="{{ url_for('reports') }}">Reports</a>
+      <a class="nav__item {{ 'is-active' if nav_active == 'insights' }}" href="{{ url_for('insights') }}">Insights</a>
+    {% endif %}
+  </div>
+
+  <div class="sidebar__foot">
+    <div class="who">
+      <div class="who__avatar">{{ user.initials }}</div>
+      <div>
+        <div class="who__name">{{ user.name }}</div>
+        <div class="who__roles">
+          {% for u in users %}
+            <form method="post" action="{{ url_for('switch_role', user_id=u.id) }}">
+              <button class="chip {{ 'chip--on' if u.id == user.id }}" type="submit">{{ 'Dept Head' if u.role == 'Department Head' else u.role }}</button>
+            </form>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

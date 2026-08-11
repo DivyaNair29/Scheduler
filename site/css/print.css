@@ -1,0 +1,9 @@
+/* Print / PDF export — reports and any view sent to paper. */
+@media print {
+  .sidebar, .topbar, .chat, .btn, .filters, .hint, .linkbtn { display: none !important; }
+  body { background: #fff; }
+  .view { padding: 0; max-width: none; }
+  .card, .tablewrap { border-color: #ccc; box-shadow: none; break-inside: avoid; }
+  .kanban__col { break-inside: avoid; }
+  @page { margin: 14mm; }
+}

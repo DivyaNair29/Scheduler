@@ -1,0 +1,155 @@
+{
+  "meta": {
+    "synthetic": true,
+    "generator": "meridian-histgen v1",
+    "disclaimer": "Synthetic data for testing/demo. Not measured floor data. INR figures are plausible but invented.",
+    "note": "Baselines are aggregates of synthetic incidents \u2014 use to exercise anomaly detection, NOT as real statistics."
+  },
+  "incidentsByCategory": {
+    "machine": 11,
+    "material": 10,
+    "people": 9,
+    "quality": 10
+  },
+  "lossByCategoryINR": {
+    "machine": 4635000,
+    "material": 6290000,
+    "people": 18515000,
+    "quality": 30365000
+  },
+  "byYear": {
+    "2011": {
+      "count": 2,
+      "loss": 1100000
+    },
+    "2012": {
+      "count": 3,
+      "loss": 3160000
+    },
+    "2013": {
+      "count": 2,
+      "loss": 21310000
+    },
+    "2014": {
+      "count": 3,
+      "loss": 1640000
+    },
+    "2015": {
+      "count": 3,
+      "loss": 1990000
+    },
+    "2016": {
+      "count": 3,
+      "loss": 1210000
+    },
+    "2017": {
+      "count": 3,
+      "loss": 4970000
+    },
+    "2018": {
+      "count": 3,
+      "loss": 1590000
+    },
+    "2019": {
+      "count": 3,
+      "loss": 890000
+    },
+    "2020": {
+      "count": 3,
+      "loss": 16390000
+    },
+    "2021": {
+      "count": 3,
+      "loss": 925000
+    },
+    "2022": {
+      "count": 2,
+      "loss": 3010000
+    },
+    "2023": {
+      "count": 3,
+      "loss": 1580000
+    },
+    "2024": {
+      "count": 2,
+      "loss": 0
+    },
+    "2025": {
+      "count": 2,
+      "loss": 40000
+    }
+  },
+  "incidentsByResource": {
+    "Calibration Bench C2": 12,
+    "Calibration Bench C1": 11,
+    "Calibration Bench C3": 11,
+    "SMT Line E1": 5,
+    "Helium Leak Rig H1": 4,
+    "Burn-in Chamber B3": 4,
+    "Burn-in Chamber B4": 4,
+    "Test Station T2": 4,
+    "Test Station T1": 3
+  },
+  "majorFailures": [
+    {
+      "id": "INC-2013-01",
+      "title": "Kova Automotive cancels order after repeated NCR failures",
+      "date": "2013-04-08",
+      "inrLoss": 21000000,
+      "orderLost": true
+    },
+    {
+      "id": "INC-2017-01",
+      "title": "Field recall: TT-644 drift at Tatva Chemicals from bad cal profile",
+      "date": "2017-05-18",
+      "inrLoss": 4800000,
+      "orderLost": false
+    },
+    {
+      "id": "INC-2020-01",
+      "title": "Pandemic lockdown: workforce and supply shock",
+      "date": "2020-03-24",
+      "inrLoss": 15500000,
+      "orderLost": true
+    }
+  ],
+  "recurringThemes": [
+    {
+      "theme": "Uncalibrated/undocumented reference standards",
+      "incidents": [
+        "INC-2011-01",
+        "INC-2012-02",
+        "INC-2017-01",
+        "INC-2025-01"
+      ],
+      "lesson": "Drift monitoring + barcoded standards + trend alerts progressively eliminated cal-standard escapes."
+    },
+    {
+      "theme": "Single-point-of-failure equipment",
+      "incidents": [
+        "INC-2015-02",
+        "INC-2021-01",
+        "INC-2024-02"
+      ],
+      "lesson": "Redundancy investments (2nd SMT line, 2nd helium rig) converted repeat losses into absorbed faults."
+    },
+    {
+      "theme": "Single-source material dependency",
+      "incidents": [
+        "INC-2011-02",
+        "INC-2014-01",
+        "INC-2024-01"
+      ],
+      "lesson": "Multi-sourcing + safety stock turned a line-starving risk into a non-event by 2024."
+    },
+    {
+      "theme": "Skill concentration / knowledge loss",
+      "incidents": [
+        "INC-2012-01",
+        "INC-2016-02",
+        "INC-2025-02"
+      ],
+      "lesson": "Cross-training + a knowledge base (KC seed) built a buffer that absorbed later absences."
+    }
+  ]
+}

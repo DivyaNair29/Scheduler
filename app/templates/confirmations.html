@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "partials/_approval_card.html" import approval_card %}
+{% block title %}Stage Confirmation · Meridian{% endblock %}
+{% block content %}
+<div class="page page--mid">
+  <div class="page__head">
+    <div>
+      <h1 class="h1">Stage Confirmation</h1>
+      <p class="muted">Constraints raised on the floor and schedule changes awaiting sign-off. Every decision is attributed to <b>{{ user.name }}</b>.</p>
+    </div>
+  </div>
+
+  {% if floor_confirms %}
+    <section class="card card--flush">
+      <div class="pad"><h2 class="card__label">SHOP-FLOOR CONFIRMATIONS TODAY</h2></div>
+      {% for f in floor_confirms %}
+        <div class="listrow listrow--tight">
+          <span class="tick">&#10003;</span>
+          <span class="grow">{{ f.item }}</span>
+          <span class="mono muted sm">{{ f.order_code }} · {{ f.stage }}</span>
+          <span class="muted sm">{{ f.operator }}</span>
+        </div>
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  <h2 class="section__title">CONSTRAINTS &amp; APPROVALS REQUIRED</h2>
+  <div class="stack">
+    {% for c in approvals %}
+      {{ approval_card(c) }}
+    {% else %}
+      <p class="empty">No constraints or approvals outstanding.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

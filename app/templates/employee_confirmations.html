@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}My Confirmations · Meridian{% endblock %}
+{% block content %}
+<div class="page page--narrow">
+  <div class="page__head">
+    <div>
+      <h1 class="h1">My Confirmations</h1>
+      <p class="muted">Today's checklist for the order and stage you picked. Ticks go straight to the production head's floor view.</p>
+    </div>
+  </div>
+
+  {% if emp_order and emp_stage %}
+    <section class="card card--flush">
+      <header class="check__head">
+        <div class="row">
+          <span class="b"><span class="mono">{{ emp_order }}</span> · {{ emp_stage }}</span>
+          <span class="muted sm push">{{ done_count }} of {{ total }} complete</span>
+        </div>
+        <div class="bar"><span class="bar__fill" style="width: {{ (done_count / total * 100)|round if total else 0 }}%"></span></div>
+      </header>
+      {% for c in checklist %}
+        <form method="post" action="{{ url_for('tick_checklist') }}" class="check {{ 'is-done' if c.done }}">
+          <input type="hidden" name="item" value="{{ c.item }}">
+          <button class="check__box" type="submit" aria-label="toggle">{{ '✓' if c.done else '' }}</button>
+          <span class="check__label">{{ c.item }}</span>
+        </form>
+      {% endfor %}
+    </section>
+  {% else %}
+    <div class="card card--dashed center">
+      <p class="muted">No order picked yet.</p>
+      <a class="btn btn--primary" href="{{ url_for('employee_dashboard') }}">Pick an order on my dashboard &rarr;</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

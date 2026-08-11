@@ -1,0 +1,52 @@
+{# one constraint + its schedule revision, with the full approve/reject chain #}
+{% macro approval_card(c) %}
+{% set tone = {'pending':'warn','approved':'info','applied':'ok','rejected':'bad'}[c.status] %}
+{% set label = {'pending':'AWAITING YOUR APPROVAL','approved':'CONSTRAINT APPROVED - SCHEDULE PENDING','applied':'APPLIED TO LIVE FLOOR','rejected':'REJECTED'}[c.status] %}
+<div class="card card--rail card--rail-{{ tone }}">
+  <div class="row row--wrap">
+    <span class="tag tag--{{ tone }}">{{ label }}</span>
+    <span class="mono muted sm">{{ c.code }} · raised by {{ c.raised_by }} · {{ c.created_at.strftime('%d %b %H:%M') }}</span>
+    <span class="push muted sm">Revision {{ c.revision }}</span>
+  </div>
+  <div class="card__title">{{ c.ctype }} · <span class="mono">{{ c.order_code }}</span> at {{ c.stage }}</div>
+  <p class="card__body">{{ c.note }}</p>
+
+  {% if c.awaiting_constraint_decision and user.can_write %}
+    <form class="row gap" method="post" action="{{ url_for('decide_constraint', code=c.code) }}">
+      <button class="btn btn--ok" name="decision" value="approve" type="submit">Approve constraint</button>
+      <button class="btn btn--bad" name="decision" value="reject" type="submit">Reject</button>
+    </form>
+  {% endif %}
+
+  {% if c.status in ('approved','applied') %}
+    <div class="panel">
+      <div class="panel__head">UPDATED SCHEDULE · PROPOSED CHANGES</div>
+      {% if c.feedback %}
+        <div class="note note--warn">Revised per your note: &ldquo;{{ c.feedback }}&rdquo;</div>
+      {% endif %}
+      <div class="changes">
+        {% for ch in c.current_changes() %}
+          <div class="change">
+            <span class="change__what">{{ ch.what }}</span>
+            <span class="mono change__from">{{ ch.from_value }}</span>
+            <span class="muted">&rarr;</span>
+            <span class="mono change__to">{{ ch.to_value }}</span>
+            <span class="muted sm">{{ ch.note }}</span>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if c.awaiting_schedule_decision and user.can_write %}
+        <form class="row gap wrap sched-form" method="post" action="{{ url_for('decide_schedule', code=c.code) }}">
+          <button class="btn btn--primary" name="decision" value="approve" type="submit">Approve schedule</button>
+          <input class="input" type="text" name="feedback" placeholder="What should change instead?">
+          <button class="btn btn--bad" name="decision" value="reject" type="submit">Reject &amp; revise</button>
+        </form>
+        <p class="muted sm">The floor plan does not change until you approve this schedule.</p>
+      {% elif c.is_live %}
+        <p class="ok-line">Approved — applied to the live floor</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endmacro %}

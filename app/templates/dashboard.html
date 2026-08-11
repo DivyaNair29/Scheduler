@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "partials/_approval_card.html" import approval_card %}
+{% block title %}Dashboard · Meridian{% endblock %}
+{% block content %}
+<div class="page">
+  <div class="page__head">
+    <div>
+      <h1 class="greet">{{ greeting }}, {{ user.name }}</h1>
+      <p class="muted">{{ now.strftime('%A %d %B %Y · %H:%M') }} · {{ user.role }} · read + write</p>
+    </div>
+    <span class="hint">Hover a phase column to expand it</span>
+  </div>
+
+  <div class="kanban">
+    {% for col in columns %}
+      <section class="kan" tabindex="0">
+        <header class="kan__head" style="background: {{ col.color }}">
+          <span class="kan__name">{{ col.label }}</span>
+          <span class="kan__count">{{ col.orders|length }}</span>
+        </header>
+        <div class="kan__body">
+          {% for o in col.orders %}
+            <article class="okard">
+              <div class="row">
+                <span class="mono b">{{ o.code }}</span>
+                <span class="badge badge--{{ o.status|lower|replace(' ','-') }} push">{{ o.status }}</span>
+              </div>
+              <div class="row sm">
+                <span class="swatch" style="background: {{ line_colors.get(o.line_code, '#8a97a4') }}"></span>
+                <span class="mono">{{ o.product }}</span>
+                <span class="muted">{{ o.line }}</span>
+              </div>
+              <div class="row sm muted">
+                <span>qty {{ o.qty }}</span>
+                <span class="mono push">due {{ o.due }}</span>
+              </div>
+            </article>
+          {% else %}
+            <p class="empty">Nothing in this phase</p>
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+
+  <section class="section">
+    <h2 class="section__title">NEEDS ATTENTION</h2>
+    <p class="muted sm">Approvals awaiting you · constraints raised on the floor · schedule changes to sign off</p>
+    <div class="stack">
+      {% for c in approvals %}
+        {{ approval_card(c) }}
+      {% else %}
+        <p class="empty">Nothing needs your approval.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Reports · Meridian{% endblock %}
+{% block content %}
+<div class="page page--mid">
+  <div class="page__head">
+    <div>
+      <h1 class="h1">Monthly reports</h1>
+      <p class="muted">Order volume, constraints and delivery performance · last six months</p>
+    </div>
+    <button class="btn btn--primary" type="button" onclick="window.print()">&darr; Download PDF</button>
+  </div>
+
+  {% if latest %}
+    <div class="grid grid--4">
+      <div class="kpi"><span class="kpi__label">ORDERS THIS MONTH</span><span class="kpi__value">{{ latest.total_orders }}</span><span class="muted sm">{{ latest.shipped }} shipped</span></div>
+      <div class="kpi"><span class="kpi__label">ON-TIME DELIVERY</span><span class="kpi__value">{{ latest.on_time_pct }}%</span><span class="muted sm">best month in the last six</span></div>
+      <div class="kpi"><span class="kpi__label">CONSTRAINTS RAISED</span><span class="kpi__value">{{ latest.constraints_raised }}</span><span class="muted sm">approved stoppages on the floor</span></div>
+      <div class="kpi"><span class="kpi__label">AVG CYCLE TIME</span><span class="kpi__value">{{ latest.avg_cycle_days }} d</span><span class="muted sm">burn-in is still the peak</span></div>
+    </div>
+  {% endif %}
+
+  <div class="tablewrap">
+    <table class="table">
+      <thead><tr><th>MONTH</th><th>ORDERS</th><th>SHIPPED</th><th>CONSTRAINTS</th><th>ON-TIME</th><th>AVG CYCLE</th><th>GROWTH</th></tr></thead>
+      <tbody>
+        {% for r in rows %}
+          <tr>
+            <td class="b">{{ r.label }}</td>
+            <td class="mono">{{ r.total }}</td>
+            <td class="mono muted">{{ r.shipped }}</td>
+            <td class="mono muted">{{ r.constraints }}</td>
+            <td class="mono">{{ r.on_time }}%</td>
+            <td class="mono muted">{{ r.cycle }} d</td>
+            <td class="mono">
+              {% if r.growth is none %}<span class="muted">—</span>
+              {% else %}<span class="{{ 'up' if r.growth > 0 else 'down' }}">{{ '+' if r.growth > 0 }}{{ r.growth }}%</span>{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="muted sm">Growth is month-on-month order volume. Constraints counts every stoppage raised on the floor and approved by the production head.</p>
+</div>
+{% endblock %}

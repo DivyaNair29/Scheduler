@@ -1,0 +1,134 @@
+/* Dashboard — phase kanban with hover-expand columns. */
+
+.kanban { display: flex; flex-wrap: wrap; gap: var(--gap); align-items: flex-start; }
+.kanban__col {
+  flex: 1 1 var(--kan-min); min-width: var(--kan-min);
+  background: var(--panel); border: 1px solid #dbe2e9; border-radius: var(--r-md); overflow: hidden;
+  transition: flex-grow .28s cubic-bezier(.4, 0, .2, 1), box-shadow .28s ease, transform .28s ease;
+}
+.kanban:hover .kanban__col { flex-grow: .8; }
+.kanban .kanban__col:hover,
+.kanban .kanban__col:focus-within {
+  flex-grow: 1.8; transform: translateY(-3px);
+  box-shadow: var(--shadow-lift); border-color: #bcc9d6; outline: none;
+}
+.kanban__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; }
+.kanban__name { font-size: 13px; font-weight: 600; color: #fff; }
+.kanban__count {
+  flex: none; font-size: 12px; font-weight: 700; color: #fff; background: rgba(255, 255, 255, .22);
+  border-radius: 12px; min-width: 22px; text-align: center; padding: 1px 7px;
+}
+.kanban__body { padding: 10px; display: flex; flex-direction: column; gap: 9px; min-height: 84px; }
+
+.order-card {
+  background: var(--card); border: 1px solid #e3e8ed; border-radius: 6px; padding: 10px 11px;
+  display: flex; flex-direction: column; gap: 7px; box-shadow: var(--shadow-card);
+}
+.order-card__top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.order-card__code { font-size: 12.5px; white-space: nowrap; }
+.order-card__meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+.order-card__foot { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+
+/* employee dashboard */
+.job-picker { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+/* use the full width: two columns on wide screens instead of a narrow stack */
+[data-region="employee-view"] { display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; align-items: start; }
+[data-region="employee-view"] > section:first-child { grid-column: 1 / -1; }
+@media (max-width: 900px) {
+  [data-region="employee-view"] { grid-template-columns: 1fr; }
+}
+
+/* kanban column show-all toggle */
+.kanban-more { width: 100%; margin-top: 6px; font-size: 11px; font-weight: 700;
+  color: #2f5fa0; background: #eef4fb; border: 1px dashed #cfe0f2; border-radius: 7px;
+  padding: 6px; cursor: pointer; }
+.kanban-more:hover { background: #e2ecfa; }
+.kanban-extra { display: flex; flex-direction: column; gap: 8px; }
+
+/* employee notifications */
+.mynotes { display: flex; flex-direction: column; }
+.mynote { padding: 11px 16px; border-top: 1px solid var(--hair); }
+.mynote:first-child { border-top: none; }
+.mynote.is-unread { background: #f2f8ff; }
+.mynote__title { font-size: 13px; font-weight: 700; color: var(--ink);
+  display: flex; align-items: center; gap: 7px; }
+.mynote__dot { width: 7px; height: 7px; border-radius: 50%; background: #3a7bd0; flex: none; }
+.mynote__detail { font-size: 12px; color: var(--ink-2); margin-top: 2px; line-height: 1.45; }
+.mynote__ts { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
+
+/* manpower attention items in needs-attention */
+.mp-attention { margin-top: 10px; border-top: 1px solid var(--hair); padding-top: 10px; }
+.mp-attention__head { font-size: 10px; font-weight: 800; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.mp-att-item { display: flex; gap: 9px; padding: 8px 0; border-top: 1px solid var(--hair); }
+.mp-att-item:first-of-type { border-top: none; }
+.mp-att-ico { flex: none; font-size: 15px; }
+.mp-att-title { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+.mp-att-detail { font-size: 11.5px; color: var(--ink-2); margin-top: 1px; }
+.mp-att-meta { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+
+/* employee rework section */
+.rw-list { display: flex; flex-direction: column; }
+.rw-item { padding: 11px 16px; border-top: 1px solid var(--hair); }
+.rw-item:first-child { border-top: none; }
+.rw-item__head { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.rw-item__code { font-weight: 800; color: var(--ink); font-size: 13px; }
+.rw-item__prod { font-size: 12px; color: var(--muted); }
+.rw-item__stage { margin-left: auto; font-size: 10.5px; font-weight: 700; color: #8a3227;
+  background: #fbe7e4; border: 1px solid #f0cdc7; border-radius: 5px; padding: 2px 8px; white-space: nowrap; }
+.rw-item__reason { font-size: 11.5px; color: var(--ink-2); margin-top: 4px; line-height: 1.45; }
+
+/* priority / rush badge on kanban order cards */
+.ocard__prio { display: inline-block; margin-left: 6px; font-size: 9.5px; font-weight: 800;
+  letter-spacing: .02em; border-radius: 4px; padding: 1px 6px; vertical-align: middle; white-space: nowrap; }
+.ocard__prio.is-locked { color: #8a5a00; background: #fdf0d6; border: 1px solid #f0d79a; }
+.ocard__prio.is-rush { color: #8a3227; background: #fbe7e4; border: 1px solid #f0cdc7; }
+.is-priority { box-shadow: inset 3px 0 0 #e6b34d; }
+
+/* dashboard two-column: Alerts + Optimization Suggested */
+.dash-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; margin-bottom: 16px; }
+@media (max-width: 1100px) { .dash-cols { grid-template-columns: 1fr; } }
+.dash-col__title { font-size: 12px; font-weight: 800; letter-spacing: .04em; color: var(--ink);
+  display: flex; align-items: center; gap: 8px; margin: 0 0 2px; }
+.dash-col__count { font-size: 10.5px; font-weight: 800; color: #fff; background: #c0453b;
+  border-radius: 999px; padding: 1px 8px; }
+.dash-col .stack { margin-top: 10px; }
+
+/* optimization groups (dropdowns) */
+.opt-groups { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.opt-group { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--card); }
+.opt-group__sum { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none;
+  padding: 11px 14px; font-size: 12.5px; font-weight: 800; color: var(--ink); background: #f7f9fb; }
+.opt-group__sum::-webkit-details-marker { display: none; }
+.opt-group__sum:hover { background: #eef3f8; }
+.opt-group__chev { font-size: 11px; color: var(--muted); transition: transform .15s ease; }
+.opt-group[open] .opt-group__chev { transform: rotate(180deg); }
+.opt-group__count { margin-left: auto; font-size: 10.5px; font-weight: 700; color: var(--muted);
+  background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; }
+.opt-group__body { display: flex; flex-direction: column; }
+.opt-item { padding: 11px 14px; border-top: 1px solid var(--hair); }
+.opt-item__title { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+.opt-item__detail { font-size: 11.5px; color: var(--ink-2); margin-top: 3px; line-height: 1.5; }
+.opt-item__gain { display: inline-block; margin-top: 7px; font-size: 11px; font-weight: 600;
+  color: #1f6b46; background: #dff0e6; padding: 3px 9px; border-radius: 6px; }
+
+/* dashboard past-decisions (date-grouped) under Alerts */
+.dash-past { margin-top: 14px; }
+.dash-past__head { font-size: 10.5px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px; }
+.dash-past__day { border: 1px solid var(--line); border-radius: 9px; overflow: hidden; margin-bottom: 8px; }
+.dash-past__sum { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none;
+  padding: 9px 12px; font-size: 12px; font-weight: 800; color: var(--ink-2); background: #f7f9fb; }
+.dash-past__sum::-webkit-details-marker { display: none; }
+.dash-past__sum:hover { background: #eef3f8; }
+.dash-past__chev { font-size: 11px; color: var(--muted); transition: transform .15s ease; }
+.dash-past__day[open] .dash-past__chev { transform: rotate(180deg); }
+.dash-past__count { margin-left: auto; font-size: 10.5px; font-weight: 700; color: var(--muted);
+  background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; }
+.dash-past__row { display: flex; align-items: center; gap: 9px; padding: 8px 12px; border-top: 1px solid var(--hair); font-size: 12px; }
+.dash-past__badge { font-size: 10px; font-weight: 800; border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+.dash-past__badge.is-ok { background: #e6f4ec; color: #1f6b46; }
+.dash-past__badge.is-rej { background: #fbe7e4; color: #8a3227; }
+.dash-past__ref { font-weight: 700; color: var(--ink); }
+.dash-past__meta { margin-left: auto; color: var(--muted); font-size: 11px; }

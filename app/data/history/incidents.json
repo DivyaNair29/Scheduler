@@ -1,0 +1,1233 @@
+{
+  "meta": {
+    "synthetic": true,
+    "generator": "meridian-histgen v1",
+    "disclaimer": "Synthetic data for testing/demo. Not measured floor data. INR figures are plausible but invented."
+  },
+  "count": 40,
+  "incidents": [
+    {
+      "id": "INC-2011-01",
+      "date": "2011-03-14",
+      "category": "machine",
+      "severity": "medium",
+      "title": "Calibration Bench C1 reference drift found during audit",
+      "orderLost": false,
+      "inrLoss": 180000,
+      "entities": {
+        "resources": [
+          "CAL-C1"
+        ],
+        "products": [
+          "PT-3051"
+        ],
+        "suppliers": [
+          "SUP-CAL"
+        ],
+        "customers": [],
+        "orders": [
+          "SO-2011-118"
+        ]
+      },
+      "problem": "Annual audit found C1's reference standard had drifted 0.4% over the year; 3 weeks of PT-3051 calibrations were within tolerance but on an uncertified bench.",
+      "rootCause": "No scheduled re-certification interval for bench standards; drift went undetected between annual audits.",
+      "correctiveAction": "Re-certified C1, re-verified the 3 weeks of affected units (all passed), issued supplementary certificates.",
+      "systemChange": "Introduced quarterly bench-standard re-certification and a drift log per bench.",
+      "businessEffect": "No units shipped bad, but 210 units needed re-verification; minor schedule slip. Cost mostly labour.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2011-02",
+      "date": "2011-09-02",
+      "category": "material",
+      "severity": "high",
+      "title": "Bad diaphragm lot from DiaphaCorp causes DP-2051 zero-shift",
+      "orderLost": false,
+      "inrLoss": 920000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "DP-2051"
+        ],
+        "suppliers": [
+          "SUP-DIAPH"
+        ],
+        "customers": [
+          "CUST-ORX"
+        ],
+        "orders": [
+          "SO-2011-241"
+        ]
+      },
+      "problem": "A diaphragm lot with out-of-spec thickness caused zero-shift in DP-2051 units; caught at final calibration, 40 units scrapped.",
+      "rootCause": "Incoming inspection sampled 2% and missed a within-lot thickness gradient.",
+      "correctiveAction": "Quarantined the lot, scrapped 40 units, expedited a replacement lot, re-ran the batch.",
+      "systemChange": "Raised diaphragm incoming-inspection sampling from 2% to 8% with thickness mapping; added DiaphaCorp to watch-list.",
+      "businessEffect": "Order shipped 9 days late; customer accepted with a penalty. Scrap + penalty + expedite cost.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2012-03",
+      "date": "2012-02-03",
+      "category": "material",
+      "severity": "low",
+      "title": "Housing finish variation causes cosmetic rejects",
+      "orderLost": false,
+      "inrLoss": 120000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "PT-3051"
+        ],
+        "suppliers": [
+          "SUP-HOUS"
+        ],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "CastWorks finish variation caused cosmetic rejects at final inspection.",
+      "rootCause": "No finish standard on incoming.",
+      "correctiveAction": "Reworked/refinished; set a finish standard.",
+      "systemChange": "Added finish acceptance criteria to incoming.",
+      "businessEffect": "Minor scrap/rework. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2012-01",
+      "date": "2012-05-20",
+      "category": "people",
+      "severity": "medium",
+      "title": "Calibration technician attrition leaves single-bench coverage",
+      "orderLost": false,
+      "inrLoss": 640000,
+      "entities": {
+        "resources": [
+          "CAL-C1",
+          "CAL-C2",
+          "CAL-C3"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "Two of four calibration techs resigned within a month; only one bench could run on Shift C for six weeks.",
+      "rootCause": "No cross-training; calibration skill concentrated in a few people; no bench-C staffing buffer.",
+      "correctiveAction": "Overtime on Shifts A/B, deferred low-priority orders, hired and trained two techs.",
+      "systemChange": "Started a calibration cross-training program; set a minimum 2-tech-per-shift staffing floor.",
+      "businessEffect": "Throughput down ~18% for six weeks; two orders slipped but none lost. Overtime cost.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2012-02",
+      "date": "2012-11-11",
+      "category": "quality",
+      "severity": "high",
+      "title": "Helium leak escape reaches Northwind \u2014 field failures",
+      "orderLost": false,
+      "inrLoss": 2400000,
+      "entities": {
+        "resources": [
+          "HEL-H1"
+        ],
+        "products": [
+          "PT-3051"
+        ],
+        "suppliers": [],
+        "customers": [
+          "CUST-NW"
+        ],
+        "orders": [
+          "SO-2012-402"
+        ]
+      },
+      "problem": "Helium leak rig H1's calibration had drifted; 12 PT-3051 units passed leak test but failed in the field at Northwind within 3 months.",
+      "rootCause": "H1 not on a calibration schedule; a slow calibration drift let marginal-leak units pass.",
+      "correctiveAction": "Field recall of the 12 units, root-caused H1, re-tested the whole shipment's retained samples.",
+      "systemChange": "Put H1 on a monthly calibration cycle with a control-standard leak check each shift; added retained-sample policy.",
+      "businessEffect": "Recall + field-service + reputational hit with a key account. Northwind put Meridian on a 6-month probation.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2013-01",
+      "date": "2013-04-08",
+      "category": "quality",
+      "severity": "critical",
+      "title": "Kova Automotive cancels order after repeated NCR failures",
+      "orderLost": true,
+      "inrLoss": 21000000,
+      "entities": {
+        "resources": [
+          "CAL-C2",
+          "BURN-B3"
+        ],
+        "products": [
+          "TT-644"
+        ],
+        "suppliers": [
+          "SUP-PCBA"
+        ],
+        "customers": [
+          "CUST-KOVA"
+        ],
+        "orders": [
+          "SO-2013-077",
+          "SO-2013-091"
+        ]
+      },
+      "problem": "Two consecutive TT-644 batches for Kova failed burn-in with high infant-mortality; NovaCircuit PCB solder-joint defects plus a burn-in profile that was too short to catch them. Kova cancelled the \u20b91.8 cr follow-on order and dual-sourced.",
+      "rootCause": "PCB supplier quality slippage + a burn-in soak duration set for cost, not for defect capture; no incoming AOI on PCBs.",
+      "correctiveAction": "Extended burn-in soak for TT-644, added AOI on incoming PCBs, issued 8D to NovaCircuit, scrapped both batches.",
+      "systemChange": "Made burn-in duration a quality-owned (not planning-owned) parameter; added incoming AOI; introduced a supplier scorecard gating re-orders.",
+      "businessEffect": "MAJOR: Kova cancelled the follow-on order and moved 40% of volume to a competitor. Direct scrap + lost order + lost future revenue.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2013-02",
+      "date": "2013-08-19",
+      "category": "machine",
+      "severity": "medium",
+      "title": "Burn-in Chamber B4 thermal controller intermittent fault",
+      "orderLost": false,
+      "inrLoss": 310000,
+      "entities": {
+        "resources": [
+          "BURN-B4"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": [
+          "SO-2013-166"
+        ]
+      },
+      "problem": "B4's thermal controller tripped intermittently before soak completion, silently aborting burn-in on some batches.",
+      "rootCause": "Ageing controller; no alarm on incomplete soak, so aborts were not always noticed.",
+      "correctiveAction": "Replaced the controller; re-ran affected batches; added a soak-completion alarm and logged interlock.",
+      "systemChange": "Added incomplete-soak alarms on both chambers and a preventive-replacement schedule for controllers.",
+      "businessEffect": "Caught before escape; ~1 week of rework. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2014-01",
+      "date": "2014-02-27",
+      "category": "material",
+      "severity": "high",
+      "title": "Senztek sensor-capsule lead-time doubles; PT line starved",
+      "orderLost": false,
+      "inrLoss": 1350000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "PT-3051",
+          "DP-2051"
+        ],
+        "suppliers": [
+          "SUP-SENZ"
+        ],
+        "customers": [
+          "CUST-BL"
+        ],
+        "orders": [
+          "SO-2014-051"
+        ]
+      },
+      "problem": "Senztek's plant flood doubled sensor-capsule lead time from 4 to 9 weeks; the highest-volume PT line ran dry.",
+      "rootCause": "Single-source dependency on Senztek for the SNS-88 capsule; no safety stock or qualified second source.",
+      "correctiveAction": "Air-freighted a partial lot, re-sequenced production to non-PT work, negotiated a recovery schedule.",
+      "systemChange": "Qualified a second capsule source; set a capsule safety-stock of 6 weeks for the SNS-88.",
+      "businessEffect": "Brightline order 3 weeks late (accepted); PT throughput halved for a month. Expedite + idle cost.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2014-03",
+      "date": "2014-06-18",
+      "category": "machine",
+      "severity": "low",
+      "title": "Calibration Bench C1 PC/software crash loses a session's logs",
+      "orderLost": false,
+      "inrLoss": 70000,
+      "entities": {
+        "resources": [
+          "CAL-C1"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "A bench-PC crash lost a calibration session's electronic records; units re-calibrated to be safe.",
+      "rootCause": "No auto-save/backup on the bench software.",
+      "correctiveAction": "Re-calibrated; added auto-save.",
+      "systemChange": "Added continuous logging + nightly backup on bench PCs.",
+      "businessEffect": "Re-work of one session. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2014-02",
+      "date": "2014-10-06",
+      "category": "people",
+      "severity": "low",
+      "title": "Shift C skill gap slows differential-pressure calibration",
+      "orderLost": false,
+      "inrLoss": 220000,
+      "entities": {
+        "resources": [
+          "CAL-C3"
+        ],
+        "products": [
+          "DP-2051"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "Newer Shift C techs took ~40% longer on DP-2051 calibration (the hardest to calibrate), creating a recurring overnight backlog.",
+      "rootCause": "DP calibration expertise concentrated on day shifts; training didn't cover the DP edge cases.",
+      "correctiveAction": "Paired senior techs onto Shift C temporarily; built a DP calibration playbook.",
+      "systemChange": "Added DP-specific certification tier; routed complex DP work to certified techs.",
+      "businessEffect": "Minor recurring slip until training landed; no orders lost.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2015-01",
+      "date": "2015-06-15",
+      "category": "quality",
+      "severity": "medium",
+      "title": "Hydro-test procedure ambiguity causes DP re-work spike",
+      "orderLost": false,
+      "inrLoss": 280000,
+      "entities": {
+        "resources": [
+          "TEST-T1"
+        ],
+        "products": [
+          "DP-2051"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": [
+          "SO-2015-140"
+        ]
+      },
+      "problem": "An ambiguous hydro-test pressure spec (1.5\u00d7MAWP vs 1.5\u00d7range) led to inconsistent testing; a batch was over-pressured and re-worked.",
+      "rootCause": "Work instruction wording was ambiguous; two shifts interpreted it differently.",
+      "correctiveAction": "Clarified the spec, re-tested the batch, re-trained both shifts.",
+      "systemChange": "Rewrote hydro work-instruction with worked examples; added a spec-clarity review to the document-control process.",
+      "businessEffect": "Contained; a week of rework. Drove a documentation-quality initiative.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2015-03",
+      "date": "2015-09-21",
+      "category": "material",
+      "severity": "low",
+      "title": "Sensor-capsule packaging damage in transit from Senztek",
+      "orderLost": false,
+      "inrLoss": 60000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "PT-3051"
+        ],
+        "suppliers": [
+          "SUP-SENZ"
+        ],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "Transit damage to capsule packaging caused a few handling-damaged capsules.",
+      "rootCause": "Inadequate transit packaging spec.",
+      "correctiveAction": "Rejected damaged units; upgraded packaging spec.",
+      "systemChange": "Set transit-packaging requirements with Senztek.",
+      "businessEffect": "Minor rejects. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2015-02",
+      "date": "2015-12-01",
+      "category": "machine",
+      "severity": "high",
+      "title": "SMT line E1 placement-head failure halts all electronics",
+      "orderLost": false,
+      "inrLoss": 1650000,
+      "entities": {
+        "resources": [
+          "SMT-E1"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [
+          "CUST-MED"
+        ],
+        "orders": [
+          "SO-2015-233"
+        ]
+      },
+      "problem": "E1's placement head failed; with a single SMT line, ALL electronics assembly stopped for 8 days awaiting a part.",
+      "rootCause": "Single SMT line = single point of failure; critical spare not held on site.",
+      "correctiveAction": "Emergency part air-freight, outsourced a batch of PCBA to a contract assembler to protect the Medisys order.",
+      "systemChange": "Stocked critical SMT spares on-site; qualified a contract PCBA backup; began a business case for a second SMT line.",
+      "businessEffect": "Medisys order protected via outsourcing (at cost); everything else slipped a week. Outsource premium + expedite.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2016-03",
+      "date": "2016-03-09",
+      "category": "quality",
+      "severity": "medium",
+      "title": "Traceability gap: unit serial-to-cert linkage broken for a batch",
+      "orderLost": false,
+      "inrLoss": 260000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "TT-644"
+        ],
+        "suppliers": [],
+        "customers": [
+          "CUST-KOVA"
+        ],
+        "orders": [
+          "SO-2016-058"
+        ]
+      },
+      "problem": "A batch shipped with serial-to-certificate linkage errors; traceability audit flagged it.",
+      "rootCause": "Manual serial entry; no validation.",
+      "correctiveAction": "Reconstructed linkage from records; re-issued certs.",
+      "systemChange": "Barcode serial capture with validation at cert generation.",
+      "businessEffect": "Audit finding, no bad hardware; drove traceability automation.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2016-01",
+      "date": "2016-07-22",
+      "category": "material",
+      "severity": "medium",
+      "title": "Housing porosity from CastWorks fails pressure integrity",
+      "orderLost": false,
+      "inrLoss": 430000,
+      "entities": {
+        "resources": [
+          "TEST-T2"
+        ],
+        "products": [
+          "PT-3051"
+        ],
+        "suppliers": [
+          "SUP-HOUS"
+        ],
+        "customers": [],
+        "orders": [
+          "SO-2016-159"
+        ]
+      },
+      "problem": "A CastWorks housing lot had porosity that failed hydro integrity on PT-3051; 25 units scrapped at test.",
+      "rootCause": "Casting porosity within spec on paper but marginal; no incoming pressure-integrity check on housings.",
+      "correctiveAction": "Scrapped 25, quarantined the lot, added a sample pressure check on incoming housings.",
+      "systemChange": "Added incoming pressure-integrity sampling for housings; tightened the CastWorks spec.",
+      "businessEffect": "Caught in-house, no escape; scrap cost. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2016-02",
+      "date": "2016-11-30",
+      "category": "people",
+      "severity": "medium",
+      "title": "Knowledge loss when senior calibration lead retires",
+      "orderLost": false,
+      "inrLoss": 520000,
+      "entities": {
+        "resources": [
+          "CAL-C1",
+          "CAL-C2",
+          "CAL-C3"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "The retiring calibration lead held undocumented tribal knowledge on edge-case calibrations; error rates rose for two months after.",
+      "rootCause": "Critical process knowledge undocumented; over-reliance on one expert.",
+      "correctiveAction": "Recalled the lead as a part-time consultant to document methods; captured the edge cases.",
+      "systemChange": "Built a calibration knowledge base (seed of the Knowledge Centre concept); mandated method documentation.",
+      "businessEffect": "Temporary quality dip; drove the knowledge-management initiative that became the KC.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2017-01",
+      "date": "2017-05-18",
+      "category": "quality",
+      "severity": "critical",
+      "title": "Field recall: TT-644 drift at Tatva Chemicals from bad cal profile",
+      "orderLost": false,
+      "inrLoss": 4800000,
+      "entities": {
+        "resources": [
+          "CAL-C2"
+        ],
+        "products": [
+          "TT-644"
+        ],
+        "suppliers": [
+          "SUP-CAL"
+        ],
+        "customers": [
+          "CUST-TATA"
+        ],
+        "orders": [
+          "SO-2017-088"
+        ]
+      },
+      "problem": "A calibration-standard mix-up loaded the wrong temperature profile on C2; 60 TT-644 units drifted out of spec in the field at Tatva. Full shipment recalled.",
+      "rootCause": "Cal standards not uniquely identified at the bench; wrong standard selected; no independent profile verification.",
+      "correctiveAction": "Recalled and re-calibrated 60 units, root-caused, added a second-person profile verification.",
+      "systemChange": "Barcoded all cal standards with bench-scan verification; added independent profile sign-off; standard traceability.",
+      "businessEffect": "MAJOR: recall cost + Tatva demanded a corrective-action audit and held new orders for 4 months. Nearly lost the account; recovered after the audit.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2017-02",
+      "date": "2017-09-25",
+      "category": "machine",
+      "severity": "low",
+      "title": "Burn-in B3 door-seal degradation causes slow temperature ramp",
+      "orderLost": false,
+      "inrLoss": 95000,
+      "entities": {
+        "resources": [
+          "BURN-B3"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "B3's door seal degraded, slowing the temperature ramp and stretching burn-in cycle time ~15%.",
+      "rootCause": "Seal wear not on a preventive schedule.",
+      "correctiveAction": "Replaced the seal; verified ramp.",
+      "systemChange": "Added door-seal inspection to the chamber PM checklist.",
+      "businessEffect": "Minor throughput drag until fixed. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2017-03",
+      "date": "2017-12-12",
+      "category": "people",
+      "severity": "low",
+      "title": "Holiday-season staffing dip creates a short calibration backlog",
+      "orderLost": false,
+      "inrLoss": 75000,
+      "entities": {
+        "resources": [
+          "CAL-C1",
+          "CAL-C2",
+          "CAL-C3"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "Concentrated holiday leave briefly thinned calibration staffing.",
+      "rootCause": "Leave not staggered.",
+      "correctiveAction": "Staggered leave; brief overtime.",
+      "systemChange": "Leave-planning tied to the staffing floor.",
+      "businessEffect": "Brief backlog. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2018-01",
+      "date": "2018-03-12",
+      "category": "material",
+      "severity": "high",
+      "title": "NovaCircuit PCB counterfeit-component scare",
+      "orderLost": false,
+      "inrLoss": 380000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [
+          "SUP-PCBA"
+        ],
+        "customers": [],
+        "orders": [
+          "SO-2018-064"
+        ]
+      },
+      "problem": "A suspected counterfeit component in a NovaCircuit PCB lot triggered a hold on all TT/LT electronics pending verification.",
+      "rootCause": "No component-authenticity verification in incoming; supplier sub-tier not controlled.",
+      "correctiveAction": "Held and tested the lot (authentic, but 2-week hold), added authenticity checks.",
+      "systemChange": "Required supplier component-traceability certs; added authenticity spot-checks; sub-tier disclosure clause.",
+      "businessEffect": "Two-week hold, precautionary; no bad parts shipped. Schedule cost only.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2018-02",
+      "date": "2018-08-07",
+      "category": "people",
+      "severity": "medium",
+      "title": "Peak-season overtime fatigue raises defect rate",
+      "orderLost": false,
+      "inrLoss": 560000,
+      "entities": {
+        "resources": [
+          "CAL-C1",
+          "CAL-C2",
+          "CAL-C3"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "Sustained overtime during a demand peak correlated with a measurable rise in calibration errors and re-work.",
+      "rootCause": "Capacity shortfall met with overtime rather than staffing; fatigue effects.",
+      "correctiveAction": "Capped overtime, added a temp-staffing arrangement for peaks.",
+      "systemChange": "Introduced a seasonal-staffing plan and an overtime ceiling tied to a defect-rate trigger.",
+      "businessEffect": "Re-work cost during the peak; drove capacity planning changes.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2018-03",
+      "date": "2018-11-16",
+      "category": "machine",
+      "severity": "medium",
+      "title": "Burn-in Chamber B4 replaced after repeated controller faults",
+      "orderLost": false,
+      "inrLoss": 650000,
+      "entities": {
+        "resources": [
+          "BURN-B4"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "After recurring 2013/2017 faults, B4's ageing controller failed again; chamber refurbished.",
+      "rootCause": "End-of-life equipment run too long.",
+      "correctiveAction": "Refurbished B4 with a modern controller.",
+      "systemChange": "Set equipment end-of-life replacement policy from fault history.",
+      "businessEffect": "Planned downtime for refurb; ended recurring B4 issues.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2019-01",
+      "date": "2019-04-30",
+      "category": "machine",
+      "severity": "high",
+      "title": "Calibration Bench C2 environmental control failure",
+      "orderLost": false,
+      "inrLoss": 470000,
+      "entities": {
+        "resources": [
+          "CAL-C2"
+        ],
+        "products": [
+          "DP-2051",
+          "PT-3051"
+        ],
+        "suppliers": [],
+        "customers": [
+          "CUST-BL"
+        ],
+        "orders": [
+          "SO-2019-102"
+        ]
+      },
+      "problem": "C2's temperature/humidity control failed; calibrations run during the drift window were suspect and needed re-verification.",
+      "rootCause": "No environmental alarm on the bench; drift ran for a shift before notice.",
+      "correctiveAction": "Re-verified affected units, repaired the control, added environmental alarms.",
+      "systemChange": "Added bench environmental monitoring with alarms and an auto-hold if out of range.",
+      "businessEffect": "Re-verification labour; a Brightline batch slipped a few days. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2019-03",
+      "date": "2019-07-03",
+      "category": "machine",
+      "severity": "medium",
+      "title": "SMT E1 solder-paste temperature excursion",
+      "orderLost": false,
+      "inrLoss": 180000,
+      "entities": {
+        "resources": [
+          "SMT-E1"
+        ],
+        "products": [
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": [
+          "SO-2019-155"
+        ]
+      },
+      "problem": "A fridge failure let solder paste warm; a suspect batch of boards was quarantined.",
+      "rootCause": "No temperature alarm on paste storage.",
+      "correctiveAction": "Quarantined and tested boards; added a storage alarm.",
+      "systemChange": "Temperature monitoring/alarms on all consumable storage.",
+      "businessEffect": "Precautionary hold; minimal scrap.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2019-02",
+      "date": "2019-10-14",
+      "category": "quality",
+      "severity": "medium",
+      "title": "Documentation-pack errors cause dispatch holds",
+      "orderLost": false,
+      "inrLoss": 240000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [
+          "CUST-NW",
+          "CUST-ORX"
+        ],
+        "orders": [
+          "SO-2019-201",
+          "SO-2019-205"
+        ]
+      },
+      "problem": "Recurring errors in shipping document packs (wrong cal certs attached) held dispatches at the gate.",
+      "rootCause": "Manual document assembly; no automated cert-to-order matching.",
+      "correctiveAction": "Corrected packs, audited recent shipments.",
+      "systemChange": "Automated cert-to-order matching in the dispatch step; barcode-verified document packs.",
+      "businessEffect": "Dispatch delays, no bad shipments; drove document automation.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2020-01",
+      "date": "2020-03-24",
+      "category": "people",
+      "severity": "critical",
+      "title": "Pandemic lockdown: workforce and supply shock",
+      "orderLost": true,
+      "inrLoss": 15500000,
+      "entities": {
+        "resources": [
+          "CAL-C1",
+          "CAL-C2",
+          "CAL-C3",
+          "BURN-B3",
+          "BURN-B4",
+          "HEL-H1",
+          "SMT-E1",
+          "TEST-T1",
+          "TEST-T2"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [
+          "SUP-SENZ",
+          "SUP-DIAPH",
+          "SUP-PCBA",
+          "SUP-HOUS",
+          "SUP-CAL"
+        ],
+        "customers": [
+          "CUST-NW",
+          "CUST-KOVA",
+          "CUST-MED",
+          "CUST-BL",
+          "CUST-ORX",
+          "CUST-TATA"
+        ],
+        "orders": [
+          "SO-2020-045",
+          "SO-2020-051",
+          "SO-2020-060"
+        ]
+      },
+      "problem": "National lockdown cut on-site workforce to a skeleton crew and disrupted every supplier simultaneously; multiple orders at risk.",
+      "rootCause": "External shock; no remote-capable planning; thin buffers.",
+      "correctiveAction": "Prioritised essential-industry orders (refining, utilities), staggered shifts, remote planning, renegotiated dates with customers.",
+      "systemChange": "Built remote-capable scheduling and approvals (seed of this scheduler); raised strategic safety-stock; multi-sourced critical items.",
+      "businessEffect": "MAJOR: ~2 months at <40% output; several orders renegotiated, one small order cancelled by mutual agreement. Broad revenue hit but no account lost.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2020-02",
+      "date": "2020-09-08",
+      "category": "material",
+      "severity": "high",
+      "title": "Post-lockdown demand snap-back overwhelms supply",
+      "orderLost": false,
+      "inrLoss": 780000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [
+          "SUP-SENZ",
+          "SUP-DIAPH",
+          "SUP-PCBA",
+          "SUP-HOUS",
+          "SUP-CAL"
+        ],
+        "customers": [],
+        "orders": [
+          "SO-2020-140"
+        ]
+      },
+      "problem": "A sharp post-lockdown demand recovery hit thin inventories; multiple material shortages at once.",
+      "rootCause": "Buffers depleted during the shutdown; suppliers also recovering.",
+      "correctiveAction": "Allocation-based scheduling, prioritised by customer commitment and margin.",
+      "systemChange": "Introduced demand-sensing and dynamic safety-stock tied to lead-time volatility.",
+      "businessEffect": "Managed via allocation; some slips, no losses. Drove S&OP maturity.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2020-03",
+      "date": "2020-12-02",
+      "category": "quality",
+      "severity": "low",
+      "title": "Remote-approval teething issues during rapid rollout",
+      "orderLost": false,
+      "inrLoss": 110000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "The hastily rolled-out remote approval flow had ambiguous states, causing a few duplicate approvals.",
+      "rootCause": "Fast rollout without state hardening.",
+      "correctiveAction": "Clarified approval states; de-duplicated.",
+      "systemChange": "Hardened the approval state machine (informs this scheduler's design).",
+      "businessEffect": "Process confusion, no product impact.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2021-03",
+      "date": "2021-03-08",
+      "category": "material",
+      "severity": "medium",
+      "title": "Calibration-standard supplier PreciCal delivery delay",
+      "orderLost": false,
+      "inrLoss": 150000,
+      "entities": {
+        "resources": [
+          "CAL-C1",
+          "CAL-C2",
+          "CAL-C3"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [
+          "SUP-CAL"
+        ],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "PreciCal delayed a reference-standard re-cert, risking bench certification lapse.",
+      "rootCause": "Single cal-standard vendor; no buffer standard.",
+      "correctiveAction": "Borrowed a certified standard; expedited re-cert.",
+      "systemChange": "Kept a spare certified reference per bench type.",
+      "businessEffect": "Averted a certification lapse. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2021-01",
+      "date": "2021-06-11",
+      "category": "machine",
+      "severity": "medium",
+      "title": "Helium Leak Rig H1 sole-rig bottleneck constrains wet lines",
+      "orderLost": false,
+      "inrLoss": 690000,
+      "entities": {
+        "resources": [
+          "HEL-H1"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": [
+          "SO-2021-118"
+        ]
+      },
+      "problem": "With a single helium leak rig, wet-line (PT/DP) throughput was capped; H1 became the chronic bottleneck as volume grew.",
+      "rootCause": "Single leak rig sized for old volumes; demand outgrew it.",
+      "correctiveAction": "Re-sequenced to smooth H1 load; scheduled a second rig purchase.",
+      "systemChange": "Added a second helium leak rig (H2) the next quarter; leak test no longer sole-constrained.",
+      "businessEffect": "Recurring slip until H2 arrived; capacity investment justified by the history.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2021-02",
+      "date": "2021-11-19",
+      "category": "quality",
+      "severity": "low",
+      "title": "Calibration rounding convention causes borderline cert failures",
+      "orderLost": false,
+      "inrLoss": 85000,
+      "entities": {
+        "resources": [
+          "CAL-C1",
+          "CAL-C3"
+        ],
+        "products": [
+          "TT-644"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "Inconsistent rounding in calibration certs put a few borderline units on the wrong side of spec on paper.",
+      "rootCause": "No standardised rounding/uncertainty convention across benches.",
+      "correctiveAction": "Standardised the convention, re-issued affected certs.",
+      "systemChange": "Codified a rounding/uncertainty standard in the cal procedure and cert template.",
+      "businessEffect": "Paperwork only, no bad hardware. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2022-01",
+      "date": "2022-04-05",
+      "category": "material",
+      "severity": "high",
+      "title": "Global chip shortage delays NovaCircuit PCBAs",
+      "orderLost": false,
+      "inrLoss": 2100000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [
+          "SUP-PCBA"
+        ],
+        "customers": [
+          "CUST-MED"
+        ],
+        "orders": [
+          "SO-2022-070"
+        ]
+      },
+      "problem": "The semiconductor shortage stretched PCBA lead times to 20+ weeks; TT/LT electronics constrained for months.",
+      "rootCause": "Industry-wide chip shortage; long-lead components single-sourced.",
+      "correctiveAction": "Redesigned to a second-source MCU where possible; last-time-buy on critical parts; re-prioritised orders.",
+      "systemChange": "Added component-risk scoring to design; multi-sourcing mandate for long-lead parts.",
+      "businessEffect": "Managed via redesign and prioritisation; Medisys date renegotiated, retained. Engineering + premium cost.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2022-02",
+      "date": "2022-10-28",
+      "category": "people",
+      "severity": "medium",
+      "title": "Great-resignation churn erodes floor experience",
+      "orderLost": false,
+      "inrLoss": 910000,
+      "entities": {
+        "resources": [
+          "CAL-C1",
+          "CAL-C2",
+          "CAL-C3",
+          "BURN-B3",
+          "BURN-B4",
+          "HEL-H1",
+          "SMT-E1",
+          "TEST-T1",
+          "TEST-T2"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "Elevated voluntary attrition across the floor lowered average experience; first-pass yield dipped for a quarter.",
+      "rootCause": "Labour-market churn; retention lagged; onboarding too slow.",
+      "correctiveAction": "Accelerated onboarding, mentorship pairing, retention adjustments.",
+      "systemChange": "Built a structured skills matrix and a faster certification path; tied scheduling to certified-skill availability.",
+      "businessEffect": "Temporary FPY dip; recovered as training matured. Re-work cost.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2023-01",
+      "date": "2023-03-17",
+      "category": "machine",
+      "severity": "medium",
+      "title": "Predictive-maintenance miss: Test Station T2 unplanned outage",
+      "orderLost": false,
+      "inrLoss": 340000,
+      "entities": {
+        "resources": [
+          "TEST-T2"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": [
+          "SO-2023-055"
+        ]
+      },
+      "problem": "T2 failed unexpectedly despite PM; a wear item wasn't on the checklist, causing a 4-day outage.",
+      "rootCause": "PM checklist incomplete; a known wear item omitted.",
+      "correctiveAction": "Repaired T2, moved work to T1, updated the PM checklist.",
+      "systemChange": "Started condition-monitoring on test stations; data-driven PM intervals.",
+      "businessEffect": "Contained via T1; minor slip. Drove predictive-maintenance adoption.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2023-02",
+      "date": "2023-08-09",
+      "category": "quality",
+      "severity": "high",
+      "title": "Marginal-capability calibration escapes to Orion Refining",
+      "orderLost": false,
+      "inrLoss": 1150000,
+      "entities": {
+        "resources": [
+          "CAL-C3"
+        ],
+        "products": [
+          "DP-2051"
+        ],
+        "suppliers": [],
+        "customers": [
+          "CUST-ORX"
+        ],
+        "orders": [
+          "SO-2023-121"
+        ]
+      },
+      "problem": "A gauge-capability (Gage R&R) gap on C3 for DP-2051 let marginal units pass; Orion flagged accuracy complaints (no field failure).",
+      "rootCause": "C3's measurement system capability for DP was never formally validated; borderline repeatability.",
+      "correctiveAction": "Validated and improved C3's DP capability, re-verified recent DP units, addressed Orion's complaint.",
+      "systemChange": "Mandated periodic Gage R&R per bench per product; capability gating before a bench runs a product.",
+      "businessEffect": "Caught as complaints, not failures; recovered the account relationship. Investigation + re-verify cost.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2023-03",
+      "date": "2023-11-27",
+      "category": "people",
+      "severity": "low",
+      "title": "Night-shift lone-working policy slows escalations",
+      "orderLost": false,
+      "inrLoss": 90000,
+      "entities": {
+        "resources": [],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "Thin Shift C staffing meant issues waited until day shift to escalate, slowing response.",
+      "rootCause": "No on-call escalation for nights.",
+      "correctiveAction": "Added a night on-call escalation path.",
+      "systemChange": "Formalised 24/7 escalation; the scheduler surfaces overnight blocks to day-shift heads.",
+      "businessEffect": "Slow escalations before the fix. Contained.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2024-01",
+      "date": "2024-02-21",
+      "category": "material",
+      "severity": "medium",
+      "title": "Diaphragm dual-source qualification pays off in a shortage",
+      "orderLost": false,
+      "inrLoss": 0,
+      "entities": {
+        "resources": [],
+        "products": [
+          "DP-2051"
+        ],
+        "suppliers": [
+          "SUP-DIAPH"
+        ],
+        "customers": [],
+        "orders": [
+          "SO-2024-044"
+        ]
+      },
+      "problem": "DiaphaCorp had a shortage, but the second source qualified in 2011 absorbed demand with minimal disruption \u2014 a SUCCESS from a past lesson.",
+      "rootCause": "N/A (this is a positive outcome of a prior corrective action).",
+      "correctiveAction": "Shifted volume to the qualified second source seamlessly.",
+      "systemChange": "Reinforced the multi-sourcing policy with evidence of value.",
+      "businessEffect": "POSITIVE: near-zero disruption where a decade earlier this would have starved the line. Validated the strategy.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2024-02",
+      "date": "2024-09-13",
+      "category": "machine",
+      "severity": "low",
+      "title": "Second SMT line eliminates the single-point-of-failure risk",
+      "orderLost": false,
+      "inrLoss": 0,
+      "entities": {
+        "resources": [
+          "SMT-E1"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "An E1 fault occurred, but the second SMT line (added after 2015) absorbed the load \u2014 no electronics stoppage. Another SUCCESS.",
+      "rootCause": "N/A (positive outcome of the 2015 corrective investment).",
+      "correctiveAction": "Ran electronics on the second line during E1 repair.",
+      "systemChange": "Confirmed the redundancy investment's value; formalised load-balancing between lines.",
+      "businessEffect": "POSITIVE: zero stoppage where 2015 lost 8 days. Redundancy paid back.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2025-01",
+      "date": "2025-01-30",
+      "category": "quality",
+      "severity": "medium",
+      "title": "NCR-2025-018: DP-2051 calibration slip caught by trend alert",
+      "orderLost": false,
+      "inrLoss": 40000,
+      "entities": {
+        "resources": [
+          "CAL-C2"
+        ],
+        "products": [
+          "DP-2051"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": [
+          "SO-2025-022"
+        ]
+      },
+      "problem": "A slow calibration trend on C2 was caught by an automated trend-alert BEFORE any unit failed \u2014 early detection working.",
+      "rootCause": "Minor reference creep, detected early by monitoring.",
+      "correctiveAction": "Re-verified the standard, re-calibrated proactively.",
+      "systemChange": "Trend-alerting (built from years of drift logs) now catches creep before escape \u2014 culmination of the drift-log history.",
+      "businessEffect": "POSITIVE: prevented an escape; near-zero cost. The monitoring built from 14 years of incidents worked.",
+      "synthetic": true
+    },
+    {
+      "id": "INC-2025-02",
+      "date": "2025-06-24",
+      "category": "people",
+      "severity": "low",
+      "title": "Cross-training buffer absorbs a sudden two-tech absence",
+      "orderLost": false,
+      "inrLoss": 0,
+      "entities": {
+        "resources": [
+          "CAL-C1",
+          "CAL-C2",
+          "CAL-C3"
+        ],
+        "products": [
+          "PT-3051",
+          "DP-2051",
+          "TT-644",
+          "LT-5400"
+        ],
+        "suppliers": [],
+        "customers": [],
+        "orders": []
+      },
+      "problem": "Two techs were suddenly absent, but cross-training (started 2012) meant other certified techs covered \u2014 no throughput loss.",
+      "rootCause": "N/A (positive outcome of the 2012 cross-training program).",
+      "correctiveAction": "Certified techs from other shifts covered calibration.",
+      "systemChange": "Cross-training and the 2-tech floor proved their value again.",
+      "businessEffect": "POSITIVE: zero slip where 2012's identical event cost six weeks of reduced throughput. The buffer worked.",
+      "synthetic": true
+    }
+  ]
+}

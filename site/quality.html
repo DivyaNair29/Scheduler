@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quality & Dispatch · Meridian Instruments</title>
+  <link rel="icon" href="img/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
+  <link rel="stylesheet" href="css/base.css?v=8">
+  <link rel="stylesheet" href="css/quality.css?v=8">
+  <link rel="stylesheet" href="css/print.css?v=8">
+</head>
+<body data-page="quality">
+  <div class="app">
+    <!-- ===== SHARED: sidebar ===== -->
+    <nav class="sidebar" data-region="sidebar">
+      <div class="sidebar__brand">
+        <img class="sidebar__logo" data-slot="brand-logo" src="img/and-logo.png" alt="">
+        <div class="sidebar__brand-text">
+          <div class="sidebar__name" data-slot="brand-name"></div>
+          <div class="sidebar__tagline" data-slot="brand-tagline"></div>
+        </div>
+      </div>
+      <div class="sidebar__nav" data-slot="nav"></div>
+      <div class="sidebar__foot">
+        <div class="syncbar" data-slot="sync"></div>
+        <div class="whoami">
+          <div class="whoami__avatar" data-slot="user-initials"></div>
+          <div>
+            <div class="whoami__name" data-slot="user-name"></div>
+            <div class="whoami__roles" data-slot="roles"></div>
+          </div>
+        </div>
+        <button class="collapse-btn" type="button" data-action="collapse-sidebar">« <span>Collapse sidebar</span></button>
+        <div class="sidebar__brandfoot">
+          <img class="sidebar__brandfoot-logo" src="img/and-logo.png?v=8" alt="AND">
+        </div>
+      </div>
+    </nav>
+
+    <div class="app__main">
+        <!-- ===== SHARED: topbar ===== -->
+        <header class="topbar" data-region="topbar">
+          <span class="status-dot status-dot--amber"></span>
+          <span>Floor data current as of <span class="mono b" data-slot="clock"></span></span>
+          <button class="linkbtn push" type="button" data-action="reset-demo">Reset demo data</button>
+        </header>
+      <main class="app__scroll">
+        <div class="view view--mid" data-slot="view">
+          <div class="view__head">
+            <div>
+              <h1 class="view__title">Quality &amp; Dispatch</h1>
+              <p class="view__sub">Stage confirmations, constraint approvals and today’s dispatch queue</p>
+            </div>
+          </div>
+
+          <!-- Dept Head / Admin -->
+          <div class="stack" data-region="head-view" hidden>
+            <section class="card card--flush" data-region="floor-confirms" hidden>
+              <div class="card__pad">
+                <h2 class="card__label">SHOP-FLOOR CONFIRMATIONS TODAY</h2>
+                <p class="muted sm">checklist items signed off by operators</p>
+              </div>
+              <div data-slot="floor-confirms"></div>
+            </section>
+
+            <section class="section">
+              <h2 class="section__title">CONSTRAINTS &amp; APPROVALS REQUIRED</h2>
+              <div class="stack" data-slot="approvals"></div>
+            </section>
+          </div>
+
+          <!-- Employee -->
+          <div class="stack" data-region="employee-view" hidden>
+            <section class="card card--flush" data-region="checklist" hidden>
+              <header class="check-head">
+                <div class="row">
+                  <span class="b"><span class="mono" data-field="order"></span> · <span data-field="stage"></span></span>
+                  <span class="muted sm push" data-field="progress"></span>
+                </div>
+                <div class="progress"><span class="progress__fill" data-slot="progress-fill"></span></div>
+              </header>
+              <div data-slot="checklist"></div>
+            </section>
+
+            <div class="card card--dashed" data-region="no-job" hidden>
+              <p class="muted">No order picked yet.</p>
+              <a class="btn btn--primary" href="index.html">Pick an order on my dashboard →</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+      <!-- ===== SHARED: chat panel ===== -->
+      <aside class="chat" data-slot="chat" data-region="chat">
+        <div class="chat__head">
+          <span class="chat__title">AI ASSISTANT</span>
+          <button class="chat__toggle" type="button" data-action="toggle-chat" aria-label="Collapse chat">›</button>
+        </div>
+        <div class="chat__body">
+          <div class="stack" data-slot="chat-messages"></div>
+        </div>
+        <div class="chat__prompts" data-slot="chat-prompts"></div>
+        <div class="chat__actions" data-slot="chat-actions"></div>
+        <form class="chat__composer" data-action="send-chat">
+          <input type="text" placeholder="Message the floor…" aria-label="Message">
+          <button class="btn btn--primary btn--sm" type="submit">Send</button>
+        </form>
+      </aside>
+  </div>
+
+  <!-- ===== SHARED TEMPLATES ===== -->
+  <template id="tpl-nav-item">
+    <a class="nav-item"><span class="nav-item__icon" data-field="icon"></span><span data-field="label"></span><span class="nav-item__badge" data-field="badge"></span></a>
+  </template>
+  <template id="tpl-role-chip">
+    <button class="role-chip" type="button"></button>
+  </template>
+  <template id="tpl-chat-message">
+    <div class="msg">
+      <span class="msg__meta" data-field="meta"></span>
+      <p class="msg__bubble" data-field="text"></p>
+    </div>
+  </template>
+  <template id="tpl-confirm-row">
+    <div class="list-row list-row--inline">
+      <span class="tick">✓</span>
+      <span class="grow" data-field="item"></span>
+      <span class="mono muted sm" data-field="meta"></span>
+      <span class="muted sm" data-field="operator"></span>
+    </div>
+  </template>
+  <template id="tpl-check-row">
+    <div class="check">
+      <span class="check__box" data-field="box"></span>
+      <span class="check__label" data-field="label"></span>
+    </div>
+  </template>
+  <template id="tpl-dispatch-row">
+    <div class="dispatch-row">
+      <span class="mono dispatch-row__when" data-field="time"></span>
+      <span class="dispatch-row__what" data-field="item"></span>
+      <span class="muted sm" data-field="customer"></span>
+      <span class="badge" data-field="status"></span>
+    </div>
+  </template>
+  <template id="tpl-approval">
+    <article class="card card--rail" data-component="approval">
+      <div class="row row--wrap">
+        <span class="tag" data-field="state"></span>
+        <span class="mono muted sm" data-field="meta"></span>
+        <span class="push muted sm" data-field="revision"></span>
+      </div>
+      <h3 class="card__title">
+        <span data-field="type"></span> · <span class="mono" data-field="order"></span> at <span data-field="stage"></span>
+      </h3>
+      <p class="card__body" data-field="note"></p>
+      <div class="row row--gap approval__decide" data-slot="decide">
+        <button class="btn btn--ok" type="button" data-action="approve-constraint">✓ Approve constraint</button>
+        <button class="btn btn--bad" type="button" data-action="reject-constraint">Reject</button>
+      </div>
+      <div class="approval__panel" data-slot="schedule">
+        <div class="approval__panel-head">UPDATED SCHEDULE · PROPOSED CHANGES</div>
+        <p class="approval__note" data-field="feedback"></p>
+        <div class="approval__changes" data-slot="changes"></div>
+        <div class="row row--gap row--wrap approval__sched" data-slot="schedule-actions">
+          <button class="btn btn--primary" type="button" data-action="approve-schedule">Approve schedule</button>
+          <input class="input" type="text" placeholder="What should change instead?" aria-label="Revision note">
+          <button class="btn btn--bad" type="button" data-action="reject-schedule">Reject &amp; revise</button>
+        </div>
+        <p class="approval__done" data-slot="schedule-done">✓ Approved — applied to the live floor</p>
+      </div>
+    </article>
+  </template>
+  <template id="tpl-change-row">
+    <div class="change">
+      <span class="change__what" data-field="what"></span>
+      <span class="mono change__from" data-field="from"></span>
+      <span class="muted">→</span>
+      <span class="mono change__to" data-field="to"></span>
+      <span class="muted sm" data-field="note"></span>
+    </div>
+  </template>
+
+  <script src="js/data.js?v=8"></script>
+  <script src="js/util.js?v=8"></script>
+  <script src="js/store.js?v=8"></script>
+  <script src="js/components.js?v=8"></script>
+  <script src="js/page-quality.js?v=8"></script>
+  <script src="js/notifications.js?v=8"></script>
+  <script src="js/order-detail.js?v=8"></script>
+  <script src="js/chat-cards.js?v=8"></script>
+  <script src="js/main.js?v=8"></script>
+</body>
+</html>

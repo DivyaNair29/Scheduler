@@ -1,0 +1,72 @@
+{# Completed-tasks panel for the head. Include in manpower.html (or dashboard):
+   {% include "partials/_completed_tasks.html" %}
+   Requires `completed` and `active_assignments` passed from the route. #}
+
+<div class="card completed-tasks">
+  <h3>Tasks awaiting your sign-off
+    {% if completed %}<span class="badge">{{ completed|length }}</span>{% endif %}
+  </h3>
+
+  {% if completed %}
+    <ul class="task-feed">
+      {% for a in completed %}
+        <li class="task-row complete">
+          <div class="task-meta">
+            <b>{{ a.order_code }}</b> — {{ a.stage }}
+            <span class="muted">completed by {{ a.employee_name }}
+              {% if a.completed_at %}· {{ a.completed_at.strftime('%H:%M') }}{% endif %}</span>
+          </div>
+          <form method="post" action="{{ url_for('accept_assignment', aid=a.id) }}">
+            <button type="submit" class="btn btn-primary">
+              Accept &amp; advance
+            </button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+    <p class="muted small">Accepting advances the order to its next stage and
+       recomputes the schedule.</p>
+  {% else %}
+    <p class="muted">Nothing waiting. Completed checklists will appear here for
+       sign-off.</p>
+  {% endif %}
+</div>
+
+{% if active_assignments %}
+<div class="card">
+  <h3>In progress</h3>
+  <ul class="task-feed">
+    {% for a in active_assignments %}
+      <li class="task-row">
+        <div class="task-meta">
+          <b>{{ a.order_code }}</b> — {{ a.stage }}
+          <span class="muted">{{ a.employee_name }}</span>
+        </div>
+        <span class="pill pill-{{ a.status }}">{{ a.status|replace('_',' ') }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{# --- Assign-a-task form for the head ---------------------------------- #}
+<div class="card">
+  <h3>Assign a task</h3>
+  <form method="post" action="{{ url_for('assign_task') }}" class="assign-form">
+    <select name="order" required>
+      <option value="">— order —</option>
+      {% for o in orders %}<option value="{{ o.code }}">{{ o.code }} ({{ o.current_stage }})</option>{% endfor %}
+    </select>
+    <select name="stage" required>
+      <option value="">— stage —</option>
+      {% for s in assign_stages %}<option>{{ s }}</option>{% endfor %}
+    </select>
+    <select name="employee_id" required>
+      <option value="">— employee —</option>
+      {% for u in users if u.role == 'Employee' %}
+        <option value="{{ u.id }}">{{ u.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Assign</button>
+  </form>
+</div>

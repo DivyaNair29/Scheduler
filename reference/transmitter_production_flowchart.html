@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transmitter Manufacturing — Order-to-Ship Flowchart</title>
+<style>
+  :root{
+    --ink:#15222e;
+    --steel:#3d5468;
+    --line:#c3ceD8;
+    --paper:#f6f8fa;
+    --card:#ffffff;
+    --front:#1a5276;   /* front-end phase */
+    --plan:#5b6d7d;    /* planning phase */
+    --mfg:#2e6f5e;     /* manufacturing phase */
+    --qa:#7d5ba6;      /* quality & dispatch phase */
+    --warn:#b9770e;
+    --fail:#922b21;
+    --done:#1e8449;
+    --mono:"SF Mono","Consolas","Roboto Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper);color:var(--ink);
+    padding:20px 14px 48px;max-width:760px;margin:0 auto;
+    line-height:1.45;
+  }
+  header{margin-bottom:6px}
+  header h1{font-size:1.25rem;letter-spacing:-.01em}
+  header p{color:var(--steel);font-size:.85rem;margin-top:4px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 22px}
+  .legend span{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;color:var(--steel)}
+  .dot{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+  .phase{margin:26px 0 10px;font-size:.72rem;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--steel);display:flex;align-items:center;gap:10px}
+  .phase::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  .stage{
+    background:var(--card);border:1px solid var(--line);border-left:5px solid var(--steel);
+    border-radius:8px;padding:12px 14px;box-shadow:0 1px 2px rgba(21,34,46,.06);
+  }
+  .stage h2{font-size:.95rem;display:flex;gap:8px;align-items:baseline}
+  .num{font-family:var(--mono);font-size:.72rem;color:#fff;background:var(--steel);
+    border-radius:4px;padding:2px 6px;flex:none}
+  .docs{margin-top:8px;display:flex;flex-wrap:wrap;gap:5px}
+  .docs b{flex-basis:100%;font-size:.68rem;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--steel)}
+  .doc{font-family:var(--mono);font-size:.7rem;background:#eef2f6;border:1px solid var(--line);
+    border-radius:4px;padding:2px 7px;color:var(--ink)}
+
+  .p-front{border-left-color:var(--front)} .p-front .num{background:var(--front)}
+  .p-plan{border-left-color:var(--plan)}   .p-plan .num{background:var(--plan)}
+  .p-mfg{border-left-color:var(--mfg)}     .p-mfg .num{background:var(--mfg)}
+  .p-qa{border-left-color:var(--qa)}       .p-qa .num{background:var(--qa)}
+  .p-done{border-left-color:var(--done)}   .p-done .num{background:var(--done)}
+
+  .arrow{display:flex;justify-content:center;padding:6px 0;color:var(--steel)}
+  .arrow svg{width:16px;height:22px}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .split-note{grid-column:1/-1;text-align:center;font-size:.7rem;color:var(--steel);
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:-2px}
+  @media (max-width:560px){
+    .split{grid-template-columns:1fr}
+  }
+
+  .decision{
+    display:flex;flex-direction:column;align-items:center;gap:0;margin:2px 0;
+  }
+  .diamond{
+    background:var(--warn);color:#fff;font-weight:700;font-size:.8rem;
+    padding:10px 18px;border-radius:8px;transform:skewX(-12deg);
+  }
+  .diamond span{display:inline-block;transform:skewX(12deg)}
+  .branches{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:8px}
+  .branch-label{text-align:center;font-size:.7rem;font-weight:700;margin-bottom:4px}
+  .lbl-fail{color:var(--fail)} .lbl-pass{color:var(--done)}
+  .rework{
+    background:#fdf1ef;border:1px solid #e4b7b2;border-left:5px solid var(--fail);
+    border-radius:8px;padding:10px 12px;font-size:.8rem;
+  }
+  .rework h3{font-size:.82rem;color:var(--fail);margin-bottom:6px}
+  .loopback{font-size:.68rem;color:var(--fail);margin-top:8px;font-family:var(--mono)}
+  @media (max-width:560px){.branches{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Transmitter Manufacturing: Order-to-Ship</h1>
+  <p>Pressure / DP / temperature transmitters &middot; configure-to-order flow with documentation at every stage</p>
+</header>
+
+<div class="legend">
+  <span><i class="dot" style="background:var(--front)"></i>Front end</span>
+  <span><i class="dot" style="background:var(--plan)"></i>Planning &amp; materials</span>
+  <span><i class="dot" style="background:var(--mfg)"></i>Manufacturing</span>
+  <span><i class="dot" style="background:var(--qa)"></i>Quality &amp; dispatch</span>
+  <span><i class="dot" style="background:var(--fail)"></i>Exception loop</span>
+</div>
+
+<div class="phase">Front end — sales &amp; engineering</div>
+
+<div class="stage p-front">
+  <h2><span class="num">01</span>Order Entry &amp; Contract Review</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Customer PO</span><span class="doc">Sales Order</span>
+    <span class="doc">Order Acknowledgment</span><span class="doc">Contract Review Checklist</span>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="stage p-front">
+  <h2><span class="num">02</span>Order Engineering / Configuration</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Model Code Sheet</span><span class="doc">Instrument Datasheet</span>
+    <span class="doc">Calibration Data Sheet</span><span class="doc">Special Reqs (NACE/SIL/Ex)</span>
+    <span class="doc">Tag Number List</span>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="phase">Planning &amp; materials</div>
+
+<div class="stage p-plan">
+  <h2><span class="num">03</span>Production Planning (MRP / ERP)</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Work Order</span><span class="doc">Bill of Materials</span>
+    <span class="doc">Routing Sheet</span><span class="doc">Material Requisition</span>
+    <span class="doc">Line Schedule</span>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="stage p-plan">
+  <h2><span class="num">04</span>Procurement &amp; Inbound Inspection</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Supplier POs</span><span class="doc">GRN</span>
+    <span class="doc">Incoming Inspection Report</span><span class="doc">MTC (EN 10204 3.1)</span>
+    <span class="doc">Supplier CoC</span><span class="doc">NCR / SCAR if rejected</span>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="stage p-plan">
+  <h2><span class="num">05</span>Kitting &amp; Staging</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Pick List</span><span class="doc">Kit Verification Checklist</span>
+    <span class="doc">Stock Issue Note</span>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="phase">Manufacturing</div>
+
+<div class="split">
+  <div class="split-note">Parallel lines — both feed final assembly</div>
+  <div class="stage p-mfg">
+    <h2><span class="num">06</span>Sensor Module Manufacturing</h2>
+    <div class="docs"><b>Documents</b>
+      <span class="doc">Traveler / Route Card</span><span class="doc">Weld Records</span>
+      <span class="doc">Fill-Fluid Batch Record</span><span class="doc">Helium Leak Test Report</span>
+      <span class="doc">In-Process Inspection</span>
+    </div>
+  </div>
+  <div class="stage p-mfg">
+    <h2><span class="num">07</span>Electronics Assembly</h2>
+    <div class="docs"><b>Documents</b>
+      <span class="doc">SMT Process Records</span><span class="doc">Firmware Version Log</span>
+      <span class="doc">Board Test Records</span><span class="doc">ESD Compliance Log</span>
+    </div>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="stage p-mfg">
+  <h2><span class="num">08</span>Final Assembly &amp; Serialization</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Assembly Traveler</span><span class="doc">Serial Number Log</span>
+    <span class="doc">Nameplate Data Sheet</span><span class="doc">Torque Records</span>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="stage p-mfg">
+  <h2><span class="num">09</span>Calibration &amp; Testing</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Calibration Certificate</span><span class="doc">Hydrostatic Test Report</span>
+    <span class="doc">Hi-Pot Test Record</span><span class="doc">Burn-in Log</span>
+    <span class="doc">Master Equipment Cal Records</span>
+  </div>
+</div>
+
+<div class="decision">
+  <div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+  <div class="diamond"><span>Pass?</span></div>
+  <div class="branches">
+    <div>
+      <div class="branch-label lbl-fail">FAIL</div>
+      <div class="rework">
+        <h3>Rework / NCR Loop</h3>
+        <div class="docs">
+          <span class="doc">Non-Conformance Report</span><span class="doc">Rework Order</span>
+          <span class="doc">8D / CAPA</span><span class="doc">Hold Tag</span>
+        </div>
+        <div class="loopback">&#8617; returns to Stage 09 after rework</div>
+      </div>
+    </div>
+    <div>
+      <div class="branch-label lbl-pass">PASS &darr;</div>
+      <div class="stage p-qa">
+        <h2><span class="num">10</span>Special Certification Checks</h2>
+        <div class="docs"><b>Documents</b>
+          <span class="doc">NACE Compliance Cert</span><span class="doc">SIL Declaration</span>
+          <span class="doc">ATEX / IECEx / PESO Label Verification</span>
+          <span class="doc">Oxygen Cleaning Cert</span><span class="doc">PMI Report</span>
+          <span class="doc">Witness Inspection Report</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="phase">Quality &amp; dispatch</div>
+
+<div class="stage p-qa">
+  <h2><span class="num">11</span>Final QC Inspection</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Final Inspection Report</span><span class="doc">Certificate of Conformance</span>
+    <span class="doc">QC Release Note</span>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="stage p-qa">
+  <h2><span class="num">12</span>Documentation Package</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Dossier Index / Transmittal</span><span class="doc">Cal Certs</span>
+    <span class="doc">MTCs</span><span class="doc">CoC</span><span class="doc">Test Reports</span>
+    <span class="doc">Manuals &amp; Drawings</span>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="stage p-qa">
+  <h2><span class="num">13</span>Packing</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Packing List</span><span class="doc">Packing Inspection Checklist</span>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="stage p-qa">
+  <h2><span class="num">14</span>Shipping &amp; Dispatch</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Commercial Invoice</span><span class="doc">Delivery Challan</span>
+    <span class="doc">E-Way Bill</span><span class="doc">Bill of Lading / AWB</span>
+    <span class="doc">Export Docs</span><span class="doc">Insurance Certificate</span>
+  </div>
+</div>
+<div class="arrow"><svg viewBox="0 0 16 22"><path d="M8 0v16M2 12l6 8 6-8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+
+<div class="stage p-done">
+  <h2><span class="num">15</span>Order Closure</h2>
+  <div class="docs"><b>Documents</b>
+    <span class="doc">Dispatch Confirmation</span><span class="doc">Proof of Delivery</span>
+    <span class="doc">Customer Notification</span><span class="doc">SO Closure / Invoicing</span>
+  </div>
+</div>
+
+</body>
+</html>

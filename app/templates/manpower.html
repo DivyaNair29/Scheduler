@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Manpower · Meridian{% endblock %}
+{% block content %}
+<div class="page">
+  <div class="page__head">
+    <div>
+      <h1 class="h1">Manpower &amp; optimization</h1>
+      <p class="muted">Operators by shift · assign to a process stage · staffing by shift</p>
+    </div>
+  </div>
+
+  <section class="card card--rail card--rail-ok">
+    <h2 class="card__label ok">OPTIMIZATION SUGGESTIONS</h2>
+    <p class="muted sm">manpower moves that recover time on the schedule</p>
+    <div class="stack sm-gap">
+      {% for s in suggestions %}
+        <article class="mini mini--row">
+          <div>
+            <div class="mini__title">{{ s.title }}</div>
+            <p class="mini__body">{{ s.detail }}</p>
+            <span class="gain">{{ s.impact }}</span>
+            <span class="muted sm">{{ s.effort }}</span>
+          </div>
+        </article>
+      {% else %}
+        <p class="empty">Staffing is balanced — no moves suggested.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="card__label">STAGE STAFFING · assigned operators</h2>
+    <div class="row gap wrap">
+      {% for s in stage_load %}
+        <span class="load load--{{ s.state }}"><span class="dot"></span>{{ s.name }}<b>{{ s.count }}</b></span>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="grid grid--3">
+    {% for sh in shifts %}
+      <section class="card card--flush">
+        <header class="shift__head"><span>Shift {{ sh.key }}</span><span class="mono">{{ sh.time }}</span></header>
+        {% for p in sh.people %}
+          <div class="person">
+            <span class="avatar">{{ p.initials }}</span>
+            <div class="person__id">
+              <div class="b">{{ p.name }}</div>
+              <div class="muted sm">{{ p.skill }}</div>
+            </div>
+            <form method="post" action="{{ url_for('assign_operator') }}">
+              <input type="hidden" name="code" value="{{ p.code }}">
+              <select name="stage" onchange="this.form.submit()">
+                <option value="" {{ 'selected' if not p.assigned_stage }}>—</option>
+                {% for s in assign_stages %}
+                  <option value="{{ s }}" {{ 'selected' if s == p.assigned_stage }}>{{ s }}</option>
+                {% endfor %}
+              </select>
+            </form>
+          </div>
+        {% endfor %}
+      </section>
+    {% endfor %}
+  </div>
+
+  <section class="card card--flush">
+    <div class="pad">
+      <h2 class="card__label">TASK PER OPERATOR</h2>
+      <p class="muted sm">What each person is on today — the same task shows in their own account</p>
+    </div>
+    {% for t in tasks %}
+      <div class="person person--task">
+        <span class="avatar">{{ t.operator.initials }}</span>
+        <div class="person__id">
+          <div class="b">{{ t.operator.name }}</div>
+          <div class="muted sm">{{ t.operator.skill }} · Shift {{ t.operator.shift }}</div>
+        </div>
+        <span class="stagepill {{ '' if t.operator.assigned_stage else 'stagepill--off' }}">{{ t.operator.assigned_stage or '—' }}</span>
+        <span class="muted sm task">{{ t.task }}</span>
+      </div>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Insights · Meridian{% endblock %}
+{% block content %}
+<div class="page page--mid">
+  <div class="page__head">
+    <div>
+      <h1 class="h1">Insights</h1>
+      <p class="muted">Where the time goes, what stops the floor, and what to change next month</p>
+    </div>
+  </div>
+
+  <div class="grid grid--2">
+    <section class="card">
+      <h2 class="card__label">ORDER VOLUME · SIX MONTHS</h2>
+      <div class="bars">
+        {% for v in charts.volume %}
+          <div class="bars__col">
+            <span class="mono xs">{{ v.value }}</span>
+            <div class="bars__track"><div class="bars__bar {{ 'bars__bar--last' if loop.last }}" style="height: {{ v.pct }}%"></div></div>
+            <span class="muted xs">{{ v.label }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="row"><h2 class="card__label">ON-TIME DELIVERY TREND</h2><span class="mono trend push">{{ charts.on_time_last }}</span></div>
+      <svg class="spark" viewBox="0 0 300 100" preserveAspectRatio="none">
+        <polyline points="{{ charts.on_time_points }}" fill="none" stroke="#2f7a56" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+      </svg>
+      <div class="row spread">
+        {% for p in charts.on_time %}<span class="muted xs">{{ p.label }}</span>{% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <div class="grid grid--2">
+    <section class="card">
+      <h2 class="card__label">WHAT STOPS THE FLOOR · CONSTRAINT CAUSES</h2>
+      {% for c in charts.causes %}
+        <div class="meter">
+          <div class="row"><span class="sm">{{ c.label }}</span><span class="mono xs push">{{ c.pct }}%</span></div>
+          <div class="meter__track"><span class="meter__fill" style="width: {{ c.pct }}%; background: {{ c.color }}"></span></div>
+        </div>
+      {% endfor %}
+    </section>
+
+    <section class="card">
+      <h2 class="card__label">LINE UTILISATION THIS MONTH</h2>
+      {% for u in charts.utilisation %}
+        <div class="meter">
+          <div class="row"><span class="sm">{{ u.label }}</span><span class="push"><span class="muted xs">{{ u.note }}</span> <span class="mono xs">{{ u.pct }}%</span></span></div>
+          <div class="meter__track"><span class="meter__fill" style="width: {{ u.pct }}%; background: {{ u.color }}"></span></div>
+        </div>
+      {% endfor %}
+    </section>
+  </div>
+
+  <section class="card">
+    <h2 class="card__label">WHERE THE CYCLE TIME SITS · AVG DAYS PER STAGE</h2>
+    <div class="grid grid--2 tight">
+      {% for s in charts.stage_days %}
+        <div class="meter">
+          <div class="row"><span class="sm">{{ s.label }}</span><span class="mono xs push">{{ s.value }} d</span></div>
+          <div class="meter__track"><span class="meter__fill {{ 'meter__fill--hot' if s.hot }}" style="width: {{ s.pct }}%"></span></div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card card--rail card--rail-ok">
+    <h2 class="card__label ok">HOW TO IMPROVE NEXT MONTH</h2>
+    <p class="muted sm">ranked by expected effect on throughput</p>
+    <div class="grid grid--3">
+      {% for a in charts.actions %}
+        <article class="mini">
+          <div class="mini__title">{{ a.title }}</div>
+          <p class="mini__body">{{ a.detail }}</p>
+          <span class="gain">{{ a.gain }}</span>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

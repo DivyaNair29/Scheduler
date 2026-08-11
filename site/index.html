@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · Meridian Instruments</title>
+  <link rel="icon" href="img/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
+  <link rel="stylesheet" href="css/base.css?v=8">
+  <link rel="stylesheet" href="css/dashboard.css?v=8">
+  <link rel="stylesheet" href="css/print.css?v=8">
+  <link rel="stylesheet" href="css/order-detail.css?v=8">
+  <link rel="stylesheet" href="css/pages.css?v=8">
+</head>
+<body data-page="dashboard">
+  <div class="app">
+    <!-- ===== SHARED: sidebar ===== -->
+    <nav class="sidebar" data-region="sidebar">
+      <div class="sidebar__brand">
+        <img class="sidebar__logo" data-slot="brand-logo" src="img/and-logo.png" alt="">
+        <div class="sidebar__brand-text">
+          <div class="sidebar__name" data-slot="brand-name"></div>
+          <div class="sidebar__tagline" data-slot="brand-tagline"></div>
+        </div>
+      </div>
+      <div class="sidebar__nav" data-slot="nav"></div>
+      <div class="sidebar__foot">
+        <div class="syncbar" data-slot="sync"></div>
+        <div class="whoami">
+          <div class="whoami__avatar" data-slot="user-initials"></div>
+          <div>
+            <div class="whoami__name" data-slot="user-name"></div>
+            <div class="whoami__roles" data-slot="roles"></div>
+          </div>
+        </div>
+        <button class="collapse-btn" type="button" data-action="collapse-sidebar">« <span>Collapse sidebar</span></button>
+        <div class="sidebar__brandfoot">
+          <img class="sidebar__brandfoot-logo" src="img/and-logo.png?v=8" alt="AND">
+        </div>
+      </div>
+    </nav>
+
+    <div class="app__main">
+        <!-- ===== SHARED: topbar ===== -->
+        <header class="topbar" data-region="topbar">
+          <span class="status-dot status-dot--amber"></span>
+          <span>Floor data current as of <span class="mono b" data-slot="clock"></span></span>
+          <button class="linkbtn push" type="button" data-action="reset-demo">Reset demo data</button>
+        </header>
+      <main class="app__scroll">
+        <div class="view" data-slot="view">
+          <div class="view__head">
+            <div>
+              <h1 class="view__title view__title--greeting" data-slot="greeting"></h1>
+              <p class="view__sub" data-slot="greeting-sub"></p>
+            </div>
+            <span class="hint">Hover a phase column to expand it</span>
+          </div>
+
+
+          <!-- Dept Head / Admin -->
+          <div class="stack" data-region="head-view" hidden>
+            <div class="kanban" data-slot="kanban"></div>
+
+            <div class="dash-cols">
+              <section class="dash-col">
+                <h2 class="dash-col__title">ALERTS · ACTION REQUIRED
+                  <span class="dash-col__count" data-slot="alert-count"></span></h2>
+                <p class="muted sm">approvals awaiting you · constraints raised on the floor</p>
+                <div class="stack" data-slot="approvals"></div>
+              </section>
+
+              <section class="dash-col">
+                <h2 class="dash-col__title">OPTIMIZATION SUGGESTED</h2>
+                <p class="muted sm">ways to recover time and lift throughput</p>
+                <div class="opt-groups" data-slot="optimizations"></div>
+              </section>
+            </div>
+
+            <section class="card card--flush">
+              <div class="card__pad">
+                <h2 class="card__label">DISPATCHES TODAY</h2>
+                <p class="muted sm">orders shipping or ready to ship today</p>
+              </div>
+              <div data-slot="dispatches"></div>
+            </section>
+          </div>
+
+          <!-- Employee -->
+          <div class="stack" data-region="employee-view" hidden>
+            <section class="card card--flush">
+              <h2 class="card__label card__pad">MY NOTIFICATIONS</h2>
+              <div class="mynotes" data-slot="my-notifications"></div>
+            </section>
+            <section class="card card--flush" data-slot="rework-section" hidden>
+              <h2 class="card__label card__pad">REWORK · NEEDS RE-DOING</h2>
+              <div class="rw-list" data-slot="rework-list"></div>
+            </section>
+            <section class="card">
+              <h2 class="card__label">WHAT AM I WORKING ON TODAY</h2>
+              <div class="job-picker">
+                <label class="field"><span>Order number</span>
+                  <select data-input="job-order"></select>
+                </label>
+                <label class="field"><span>Stage</span>
+                  <select data-input="job-stage"></select>
+                </label>
+                <button class="btn btn--primary" type="button" data-action="set-job">Set my job</button>
+                <a class="btn btn--ghost" href="quality.html">Open today’s checklist →</a>
+              </div>
+              <p class="card__foot" data-slot="job-summary" hidden></p>
+            </section>
+
+            <section class="card">
+              <h2 class="card__label">RAISE A CONSTRAINT</h2>
+              <p class="muted sm">Goes to the production head for approval. It only appears on the schedule board once approved.</p>
+              <div class="stack stack--tight" style="margin-top:12px">
+                <div class="row row--gap row--wrap">
+                  <select data-input="con-type" aria-label="Constraint type"></select>
+                  <select data-input="con-order" aria-label="Order"></select>
+                  <select data-input="con-stage" aria-label="Stage"></select>
+                </div>
+                <textarea rows="2" placeholder="What is blocking the work?" data-input="con-note" aria-label="Constraint detail"></textarea>
+                <button class="btn btn--primary" type="button" style="align-self:flex-start" data-action="raise-constraint">Send to production head</button>
+              </div>
+            </section>
+
+            <section class="card card--flush">
+              <h2 class="card__label card__pad">MY CONSTRAINTS</h2>
+              <div data-slot="my-constraints"></div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+
+      <!-- ===== SHARED: chat panel ===== -->
+      <aside class="chat" data-slot="chat" data-region="chat">
+        <div class="chat__head">
+          <span class="chat__title">AI ASSISTANT</span>
+          <button class="chat__toggle" type="button" data-action="toggle-chat" aria-label="Collapse chat">›</button>
+        </div>
+        <div class="chat__body">
+          <div class="stack" data-slot="chat-messages"></div>
+        </div>
+        <div class="chat__prompts" data-slot="chat-prompts"></div>
+        <div class="chat__actions" data-slot="chat-actions"></div>
+        <form class="chat__composer" data-action="send-chat">
+          <input type="text" placeholder="Message the floor…" aria-label="Message">
+          <button class="btn btn--primary btn--sm" type="submit">Send</button>
+        </form>
+      </aside>
+  </div>
+
+  <!-- ===== SHARED TEMPLATES ===== -->
+  <template id="tpl-dispatch-row">
+    <div class="dispatch-row">
+      <span class="mono dispatch-row__when" data-field="time"></span>
+      <span class="dispatch-row__what" data-field="item"></span>
+      <span class="muted sm" data-field="customer"></span>
+      <span class="badge" data-field="status"></span>
+    </div>
+  </template>
+  <template id="tpl-nav-item">
+    <a class="nav-item"><span class="nav-item__icon" data-field="icon"></span><span data-field="label"></span><span class="nav-item__badge" data-field="badge"></span></a>
+  </template>
+  <template id="tpl-role-chip">
+    <button class="role-chip" type="button"></button>
+  </template>
+  <template id="tpl-chat-message">
+    <div class="msg">
+      <span class="msg__meta" data-field="meta"></span>
+      <p class="msg__bubble" data-field="text"></p>
+    </div>
+  </template>
+  <template id="tpl-kanban-col">
+    <section class="kanban__col" tabindex="0">
+      <header class="kanban__head" data-slot="kanban-head">
+        <span class="kanban__name" data-field="name"></span>
+        <span class="kanban__count" data-field="count"></span>
+      </header>
+      <div class="kanban__body" data-slot="kanban-body"></div>
+    </section>
+  </template>
+  <template id="tpl-order-card">
+    <article class="order-card">
+      <div class="order-card__top">
+        <span class="mono b order-card__code" data-field="code"></span>
+        <span class="badge push" data-field="status"></span>
+      </div>
+      <div class="order-card__meta">
+        <span class="swatch" data-slot="line-swatch"></span>
+        <span class="mono" data-field="product"></span>
+        <span class="muted" data-field="line"></span>
+      </div>
+      <div class="order-card__foot">
+        <span data-field="qty"></span>
+        <span class="mono push" data-field="due"></span>
+      </div>
+    </article>
+  </template>
+  <template id="tpl-my-constraint">
+    <div class="list-row">
+      <div class="row row--wrap">
+        <span class="tag" data-field="state"></span>
+        <span class="mono muted sm" data-field="meta"></span>
+      </div>
+      <p class="list-row__body" data-field="body"></p>
+    </div>
+  </template>
+  <template id="tpl-approval">
+    <article class="card card--rail" data-component="approval">
+      <div class="row row--wrap">
+        <span class="tag" data-field="state"></span>
+        <span class="mono muted sm" data-field="meta"></span>
+        <span class="push muted sm" data-field="revision"></span>
+      </div>
+      <h3 class="card__title">
+        <span data-field="type"></span> · <span class="mono" data-field="order"></span> at <span data-field="stage"></span>
+      </h3>
+      <p class="card__body" data-field="note"></p>
+      <div class="row row--gap approval__decide" data-slot="decide">
+        <button class="btn btn--ok" type="button" data-action="approve-constraint">✓ Approve constraint</button>
+        <button class="btn btn--bad" type="button" data-action="reject-constraint">Reject</button>
+      </div>
+      <div class="approval__panel" data-slot="schedule">
+        <div class="approval__panel-head">UPDATED SCHEDULE · PROPOSED CHANGES</div>
+        <p class="approval__note" data-field="feedback"></p>
+        <div class="approval__changes" data-slot="changes"></div>
+        <div class="row row--gap row--wrap approval__sched" data-slot="schedule-actions">
+          <button class="btn btn--primary" type="button" data-action="approve-schedule">Approve schedule</button>
+          <input class="input" type="text" placeholder="What should change instead?" aria-label="Revision note">
+          <button class="btn btn--bad" type="button" data-action="reject-schedule">Reject &amp; revise</button>
+        </div>
+        <p class="approval__done" data-slot="schedule-done">✓ Approved — applied to the live floor</p>
+      </div>
+    </article>
+  </template>
+  <template id="tpl-change-row">
+    <div class="change">
+      <span class="change__what" data-field="what"></span>
+      <span class="mono change__from" data-field="from"></span>
+      <span class="muted">→</span>
+      <span class="mono change__to" data-field="to"></span>
+      <span class="muted sm" data-field="note"></span>
+    </div>
+  </template>
+
+  <script src="js/data.js?v=8"></script>
+  <script src="js/util.js?v=8"></script>
+  <script src="js/store.js?v=8"></script>
+  <script src="js/components.js?v=8"></script>
+  <script src="js/order-detail.js?v=8"></script>
+  <script src="js/page-dashboard.js?v=8"></script>
+  <script src="js/notifications.js?v=8"></script>
+  <script src="js/chat-cards.js?v=8"></script>
+  <script src="js/main.js?v=8"></script>
+</body>
+</html>

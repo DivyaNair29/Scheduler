@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schedule Board · Meridian Instruments</title>
+  <link rel="icon" href="img/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
+  <link rel="stylesheet" href="css/base.css?v=8">
+  <link rel="stylesheet" href="css/board.css?v=8">
+  <link rel="stylesheet" href="css/print.css?v=8">
+  <link rel="stylesheet" href="css/order-detail.css?v=8">
+  <link rel="stylesheet" href="css/pages.css?v=8">
+</head>
+<body data-page="board">
+  <div class="app">
+    <!-- ===== SHARED: sidebar ===== -->
+    <nav class="sidebar" data-region="sidebar">
+      <div class="sidebar__brand">
+        <img class="sidebar__logo" data-slot="brand-logo" src="img/and-logo.png" alt="">
+        <div class="sidebar__brand-text">
+          <div class="sidebar__name" data-slot="brand-name"></div>
+          <div class="sidebar__tagline" data-slot="brand-tagline"></div>
+        </div>
+      </div>
+      <div class="sidebar__nav" data-slot="nav"></div>
+      <div class="sidebar__foot">
+        <div class="syncbar" data-slot="sync"></div>
+        <div class="whoami">
+          <div class="whoami__avatar" data-slot="user-initials"></div>
+          <div>
+            <div class="whoami__name" data-slot="user-name"></div>
+            <div class="whoami__roles" data-slot="roles"></div>
+          </div>
+        </div>
+        <button class="collapse-btn" type="button" data-action="collapse-sidebar">« <span>Collapse sidebar</span></button>
+        <div class="sidebar__brandfoot">
+          <img class="sidebar__brandfoot-logo" src="img/and-logo.png?v=8" alt="AND">
+        </div>
+      </div>
+    </nav>
+
+    <div class="app__main">
+        <!-- ===== SHARED: topbar ===== -->
+        <header class="topbar" data-region="topbar">
+          <span class="status-dot status-dot--amber"></span>
+          <span>Floor data current as of <span class="mono b" data-slot="clock"></span></span>
+          <button class="linkbtn push" type="button" data-action="reset-demo">Reset demo data</button>
+        </header>
+      <main class="app__scroll">
+        <div class="view" data-slot="view">
+          <div class="view__head">
+            <div>
+              <h1 class="view__title">Schedule Board · Manufacturing → Dispatch</h1>
+              <p class="view__sub">sensor → electronics → assembly → calibration → burn-in → final QC → documentation → packing → shipping &amp; dispatch</p>
+            </div>
+            <div class="board-tabs" data-slot="board-tabs">
+              <button class="board-tab is-active" data-scope="today">Today</button>
+              <button class="board-tab" data-scope="week">Week plan</button>
+              <button class="board-tab" data-scope="month">Month plan</button>
+            </div>
+          </div>
+
+          <div class="gantt">
+            <div class="gantt__ruler" data-slot="ruler"></div>
+            <div data-slot="gantt-rows"></div>
+          </div>
+
+          <section class="card card--rail card--ok" data-region="applied" hidden>
+            <h2 class="card__label tone-ok">APPROVED CONSTRAINTS IN EFFECT</h2>
+            <div class="stack stack--tight" data-slot="applied"></div>
+          </section>
+
+          <section class="card" data-region="confirmations" hidden>
+            <h2 class="card__label">SHOP-FLOOR CONFIRMATIONS TODAY</h2>
+            <div class="row row--gap row--wrap" data-slot="confirmations"></div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+      <!-- ===== SHARED: chat panel ===== -->
+      <aside class="chat" data-slot="chat" data-region="chat">
+        <div class="chat__head">
+          <span class="chat__title">AI ASSISTANT</span>
+          <button class="chat__toggle" type="button" data-action="toggle-chat" aria-label="Collapse chat">›</button>
+        </div>
+        <div class="chat__body">
+          <div class="stack" data-slot="chat-messages"></div>
+        </div>
+        <div class="chat__prompts" data-slot="chat-prompts"></div>
+        <div class="chat__actions" data-slot="chat-actions"></div>
+        <form class="chat__composer" data-action="send-chat">
+          <input type="text" placeholder="Message the floor…" aria-label="Message">
+          <button class="btn btn--primary btn--sm" type="submit">Send</button>
+        </form>
+      </aside>
+  </div>
+
+  <!-- ===== SHARED TEMPLATES ===== -->
+  <template id="tpl-nav-item">
+    <a class="nav-item"><span class="nav-item__icon" data-field="icon"></span><span data-field="label"></span><span class="nav-item__badge" data-field="badge"></span></a>
+  </template>
+  <template id="tpl-role-chip">
+    <button class="role-chip" type="button"></button>
+  </template>
+  <template id="tpl-chat-message">
+    <div class="msg">
+      <span class="msg__meta" data-field="meta"></span>
+      <p class="msg__bubble" data-field="text"></p>
+    </div>
+  </template>
+  <template id="tpl-gantt-row">
+    <div class="gantt__row">
+      <div class="gantt__label">
+        <span class="swatch" data-slot="swatch"></span>
+        <div>
+          <div data-field="label"></div>
+          <div class="gantt__label-sub" data-field="sub"></div>
+        </div>
+      </div>
+      <div class="gantt__track" data-slot="track"></div>
+    </div>
+  </template>
+  <template id="tpl-gantt-block">
+    <div class="gantt-block">
+      <span class="mono b" data-field="code"></span>
+      <span class="gantt-block__sub" data-field="stage"></span>
+    </div>
+  </template>
+  <template id="tpl-gantt-band">
+    <div class="gantt-band">
+      <span class="gantt-band__label" data-field="label"></span>
+      <span class="gantt-band__sub" data-field="note"></span>
+    </div>
+  </template>
+  <template id="tpl-applied-row">
+    <div class="row row--top">
+      <span class="tick">✓</span>
+      <div class="grow">
+        <div class="b" data-field="title"></div>
+        <p class="muted sm" data-field="note"></p>
+      </div>
+      <span class="mono muted sm" data-field="meta"></span>
+    </div>
+  </template>
+  <template id="tpl-confirm-pill">
+    <span class="pill">✓ <span class="mono b" data-field="order"></span> <span data-field="item"></span> <span class="muted" data-field="operator"></span></span>
+  </template>
+  <template id="tpl-mini-card">
+    <article class="mini">
+      <div class="row">
+        <span class="tag" data-field="kind"></span>
+        <span class="mono muted sm" data-field="ref"></span>
+      </div>
+      <div class="mini__title" data-field="title"></div>
+      <p class="mini__body" data-field="detail"></p>
+      <span class="gain" data-field="gain"></span>
+    </article>
+  </template>
+
+  <script src="js/data.js?v=8"></script>
+  <script src="js/util.js?v=8"></script>
+  <script src="js/store.js?v=8"></script>
+  <script src="js/components.js?v=8"></script>
+  <script src="js/page-board.js?v=8"></script>
+  <script src="js/notifications.js?v=8"></script>
+  <script src="js/order-detail.js?v=8"></script>
+  <script src="js/chat-cards.js?v=8"></script>
+  <script src="js/main.js?v=8"></script>
+</body>
+</html>

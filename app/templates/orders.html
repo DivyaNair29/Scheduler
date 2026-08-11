@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Orders · Meridian{% endblock %}
+{% block content %}
+<div class="page">
+  <div class="page__head">
+    <div>
+      <h1 class="h1">Orders</h1>
+      <p class="muted">Every order across all phases · one row per sales order</p>
+    </div>
+  </div>
+  <div class="tablewrap">
+    <table class="table">
+      <thead>
+        <tr><th>SEQ</th><th>ORDER</th><th>PRODUCT</th><th class="right">QTY</th><th>PHASE</th><th>STAGE</th><th>SOURCE</th><th>DUE</th><th>STATUS</th></tr>
+      </thead>
+      <tbody>
+        {% for o in orders %}
+          <tr>
+            <td class="mono muted">{{ '%02d'|format(loop.index) }}</td>
+            <td class="mono b">{{ o.code }}</td>
+            <td><span class="swatch" style="background: {{ line_colors.get(o.line_code, '#8a97a4') }}"></span> <span class="mono">{{ o.product }}</span> <span class="muted">{{ o.family }}</span></td>
+            <td class="mono right b">{{ o.qty }}</td>
+            <td><span class="swatch" style="background: {{ phase_colors.get(o.phase, '#8a97a4') }}"></span> {{ o.phase|capitalize }}</td>
+            <td>{{ o.current_stage }}</td>
+            <td><span class="src src--{{ o.update_source }}">{{ o.update_source|upper }}</span></td>
+            <td class="mono muted">{{ o.due }}</td>
+            <td><span class="badge badge--{{ o.status|lower|replace(' ','-') }}">{{ o.status }}</span></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

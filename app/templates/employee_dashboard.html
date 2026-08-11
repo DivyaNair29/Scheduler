@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ greeting }}, {{ user.name }}</h1>
+  <p class="muted">Your task for this shift</p>
+</div>
+
+{# ---- CASE 1: the head assigned a specific task ------------------------- #}
+{% if assignment %}
+  <div class="card assigned-task">
+    <div class="task-banner">
+      <span class="pill pill-head">Assigned by {{ assignment.assigned_by }}</span>
+      <span class="pill pill-status pill-{{ assignment.status }}">
+        {{ assignment.status|replace('_',' ')|title }}
+      </span>
+    </div>
+    <h2>{{ assignment.order }} — {{ assignment.stage }}</h2>
+    <p class="muted">Work through the checklist below. When every item is
+       confirmed, it goes to {{ assignment.assigned_by }} for sign-off.</p>
+  </div>
+
+{# ---- CASE 2: no assignment — employee self-selects --------------------- #}
+{% else %}
+  <div class="card self-select">
+    <h2>Pick what you're working on</h2>
+    <p class="muted">The production head hasn't assigned you a task, so choose the
+       order and stage you're on. The checklist will appear.</p>
+    <form method="post" action="{{ url_for('set_assignment') }}" class="pick-form">
+      <label>Order
+        <select name="order" required>
+          <option value="">— select order —</option>
+          {% for o in orders %}
+            <option value="{{ o.code }}" {% if o.code==emp_order %}selected{% endif %}>
+              {{ o.code }} — {{ o.product }} ({{ o.current_stage }})
+            </option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Stage
+        <select name="stage" required>
+          <option value="">— select stage —</option>
+          {% for s in assign_stages %}
+            <option value="{{ s }}" {% if s==emp_stage %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button type="submit" class="btn btn-primary">Show checklist</button>
+    </form>
+  </div>
+{% endif %}
+
+{# ---- CHECKLIST (shown in both cases once order+stage are known) -------- #}
+{% if emp_order and emp_stage %}
+  <div class="card">
+    <div class="checklist-head">
+      <h3>{{ emp_stage }} checklist — {{ emp_order }}</h3>
+      <span class="progress">{{ done_count }} / {{ total }} done</span>
+    </div>
+
+    {% if checklist %}
+      <div class="progress-bar">
+        <div class="progress-fill"
+             style="width: {{ (done_count / total * 100) if total else 0 }}%"></div>
+      </div>
+      <ul class="checklist">
+        {% for c in checklist %}
+          <li class="{{ 'done' if c.done else '' }}">
+            <form method="post" action="{{ url_for('tick_checklist') }}" class="tick">
+              <input type="hidden" name="order" value="{{ emp_order }}">
+              <input type="hidden" name="stage" value="{{ emp_stage }}">
+              <input type="hidden" name="item" value="{{ c.item }}">
+              <button type="submit" class="tickbox {{ 'checked' if c.done else '' }}"
+                      aria-label="toggle {{ c.item }}">
+                {{ '✓' if c.done else '' }}
+              </button>
+              <span>{{ c.item }}</span>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+
+      {% if done_count == total and total > 0 %}
+        <div class="complete-banner">
+          ✓ All items confirmed — sent to the production head for sign-off.
+        </div>
+      {% endif %}
+    {% else %}
+      <p class="muted">No checklist defined for this stage.</p>
+    {% endif %}
+  </div>
+{% endif %}
+
+{# ---- RAISE A CONSTRAINT (unchanged capability) ------------------------- #}
+<div class="card">
+  <h3>Flag a problem</h3>
+  <form method="post" action="{{ url_for('raise_constraint') }}" class="constraint-form">
+    <input type="hidden" name="order" value="{{ emp_order }}">
+    <input type="hidden" name="stage" value="{{ emp_stage }}">
+    <select name="type">
+      {% for t in constraint_types %}<option>{{ t }}</option>{% endfor %}
+    </select>
+    <input name="note" placeholder="What's blocking the work?" required>
+    <button type="submit" class="btn">Send to head</button>
+  </form>
+  {% if my_constraints %}
+    <ul class="mini-log">
+      {% for c in my_constraints[:5] %}
+        <li><b>{{ c.code }}</b> {{ c.order_code }} — {{ c.ctype }}
+            <span class="pill pill-{{ c.status }}">{{ c.status }}</span></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}
