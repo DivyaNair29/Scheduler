@@ -98,6 +98,30 @@ class Assistant:
                                     "contribut")):
                 return self._answer_top_cause(schedule, constraints)
 
+        # --- month-trend questions: "why did orders drop in August?", "why the
+        # dip in on-time in April?" — explained from the per-month insight notes.
+        months = {"jan": "Jan", "feb": "Feb", "mar": "Mar", "apr": "Apr",
+                  "may": "May", "jun": "Jun", "jul": "Jul", "aug": "Aug",
+                  "sep": "Sep", "oct": "Oct", "nov": "Nov", "dec": "Dec",
+                  "january": "Jan", "february": "Feb", "march": "Mar",
+                  "april": "Apr", "june": "Jun", "july": "Jul", "august": "Aug",
+                  "september": "Sep", "october": "Oct", "november": "Nov",
+                  "december": "Dec"}
+        if "why" in q or "dip" in q or "drop" in q or "fell" in q or "reduc" in q \
+                or "decrease" in q or "decline" in q or "lower" in q:
+            found_month = None
+            for token, mon in months.items():
+                if token in q:
+                    found_month = mon
+                    break
+            if found_month:
+                metric = ("on_time" if any(w in q for w in
+                          ("on time", "on-time", "ontime", "deliver")) else
+                          "volume" if any(w in q for w in
+                          ("order", "volume", "output", "produc", "throughput"))
+                          else None)
+                return self._answer_month_trend(found_month, metric)
+
         # high-priority / protected orders
         if (("priorit" in q or "protected" in q or "locked" in q or "vip" in q)
                 and any(w in q for w in ("which", "what", "list", "show", "any",
@@ -522,6 +546,48 @@ class Assistant:
                       kind="analysis",
                       citations=[{"label": "Constraint-cause analysis",
                                   "detail": "live events + 15-year incident history rollup"}])
+
+    def _answer_month_trend(self, month, metric) -> Answer:
+        """Explain a month-over-month movement using the per-month insight notes
+        (on-time reasons) and volume data."""
+        try:
+            import services
+        except Exception:
+            services = None
+        # on-time dip explanation
+        if metric != "volume" and services and hasattr(services, "MONTH_ON_TIME_REASONS"):
+            info = services.MONTH_ON_TIME_REASONS.get(month)
+            if info:
+                causes = info.get("causes", [])
+                lines = "\n".join(f"• {c['label']}: {c['pct']}%" for c in causes[:4])
+                return Answer(
+                    f"{month} — {info.get('note','')}\n\nWhat drove it:\n{lines}",
+                    kind="analysis",
+                    citations=[{"label": "On-time analysis",
+                                "detail": f"{month} constraint-cause breakdown"}])
+        # volume explanation
+        if services and hasattr(services, "MONTH_ORDERS"):
+            mo = services.MONTH_ORDERS.get(month)
+            if mo is not None:
+                cnt = len(mo) if isinstance(mo, list) else mo
+                note = ""
+                if services and hasattr(services, "MONTH_ON_TIME_REASONS"):
+                    r = services.MONTH_ON_TIME_REASONS.get(month)
+                    if r:
+                        note = " " + r.get("note", "")
+                return Answer(
+                    f"{month} recorded {cnt} orders." + note +
+                    " Order intake reflects customer demand and how many large "
+                    "batches landed that month; the dashboard's volume chart lets "
+                    "you click the month to see the specific orders behind it.",
+                    kind="analysis",
+                    citations=[{"label": "Order volume", "detail": f"{month} order intake"}])
+        # fallback: no data for that month
+        return Answer(
+            f"I don't have a recorded breakdown for {month}. The insights charts "
+            "cover the last six months — click that month's bar or point on the "
+            "dashboard to see the orders and causes behind it.",
+            kind="analysis")
 
     def _answer_suggestions(self, schedule: Schedule) -> Answer:
         sugs = _suggestions.generate(schedule, self.now)

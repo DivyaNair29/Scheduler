@@ -132,3 +132,19 @@
 .dash-past__badge.is-rej { background: #fbe7e4; color: #8a3227; }
 .dash-past__ref { font-weight: 700; color: var(--ink); }
 .dash-past__meta { margin-left: auto; color: var(--muted); font-size: 11px; }
+
+/* optimization apply/reject decision controls */
+.opt-item__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 9px; }
+.opt-btn { border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; font-size: 11px;
+  font-weight: 700; cursor: pointer; background: #fff; }
+.opt-btn--apply { background: #1f6b46; color: #fff; border-color: #1f6b46; }
+.opt-btn--apply:hover { background: #185737; }
+.opt-btn--reject:hover { background: #fbe7e4; color: #8a3227; border-color: #f0cdc7; }
+.opt-btn:disabled { opacity: .5; cursor: default; }
+.opt-remark { flex: 1; min-width: 120px; border: 1px solid var(--line); border-radius: 6px;
+  padding: 4px 8px; font-size: 11.5px; }
+.opt-msg { font-size: 11px; color: #8a3227; }
+.opt-item__done { margin-top: 8px; font-size: 11.5px; font-weight: 600; }
+.opt-item__done.is-ok { color: #1f6b46; }
+.opt-item__done.is-rej { color: #8a3227; }
+.opt-item--decided { opacity: .75; }

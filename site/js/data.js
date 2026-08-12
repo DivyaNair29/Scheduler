@@ -24,7 +24,7 @@ window.MERIDIAN_DATA = {
     { group: null, items: [
       { id: "dashboard", label: "Dashboard",          href: "index.html" },
       { id: "board",     label: "Schedule Board",     href: "board.html",    write: true, badgeKey: "mfgOrders" },
-      { id: "orders",    label: "Orders",             href: "orders.html",   badgeKey: "orders" },
+      { id: "orders",    label: "Orders",             href: "orders.html",   employeeLabel: "My Work", employeeHref: "mywork.html", badgeKey: "orders" },
       { id: "quality",   label: "Quality & Dispatch", href: "quality.html",  employeeLabel: "Stage Confirmations", badgeKey: "approvals" }
     ]}
   ],

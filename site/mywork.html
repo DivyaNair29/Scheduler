@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orders · Meridian Instruments</title>
+  <link rel="icon" href="img/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
+  <link rel="stylesheet" href="css/base.css?v=8">
+  <link rel="stylesheet" href="css/orders.css?v=8">
+  <link rel="stylesheet" href="css/print.css?v=8">
+  <link rel="stylesheet" href="css/order-detail.css?v=8">
+</head>
+<body data-page="orders">
+  <div class="app">
+    <!-- ===== SHARED: sidebar ===== -->
+    <nav class="sidebar" data-region="sidebar">
+      <div class="sidebar__brand">
+        <img class="sidebar__logo" data-slot="brand-logo" src="img/and-logo.png" alt="">
+        <div class="sidebar__brand-text">
+          <div class="sidebar__name" data-slot="brand-name"></div>
+          <div class="sidebar__tagline" data-slot="brand-tagline"></div>
+        </div>
+      </div>
+      <div class="sidebar__nav" data-slot="nav"></div>
+      <div class="sidebar__foot">
+        <div class="syncbar" data-slot="sync"></div>
+        <div class="whoami">
+          <div class="whoami__avatar" data-slot="user-initials"></div>
+          <div>
+            <div class="whoami__name" data-slot="user-name"></div>
+            <div class="whoami__roles" data-slot="roles"></div>
+          </div>
+        </div>
+        <button class="collapse-btn" type="button" data-action="collapse-sidebar">« <span>Collapse sidebar</span></button>
+        <form method="post" action="/logout" class="sidebar__logout-form"><button class="logout-btn" type="submit">⏻ <span>Log out</span></button></form>
+        <div class="sidebar__brandfoot">
+          <img class="sidebar__brandfoot-logo" src="img/and-logo.png?v=8" alt="AND">
+        </div>
+      </div>
+    </nav>
+
+    <div class="app__main">
+        <!-- ===== SHARED: topbar ===== -->
+        <header class="topbar" data-region="topbar">
+          <span class="status-dot status-dot--amber"></span>
+          <span>Floor data current as of <span class="mono b" data-slot="clock"></span></span>
+          <button class="linkbtn push" type="button" data-action="reset-demo">Reset demo data</button>
+        </header>
+      <main class="app__scroll">
+        <div class="view" data-slot="view">
+          <div class="view__head">
+            <div>
+              <h1 class="view__title">My Work</h1>
+              <p class="view__sub">What you've worked on · shift · approval status</p>
+            </div>
+            <span class="hint" data-slot="mw-count"></span>
+          </div>
+
+          <div class="mw-summary" data-slot="mw-summary"></div>
+
+          <div class="tablewrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ORDER</th><th>STAGE</th><th>SHIFT</th><th class="right">CHECKLIST</th>
+                  <th>SUBMITTED</th><th>REVIEWED BY</th><th>STATUS</th>
+                </tr>
+              </thead>
+              <tbody data-slot="mw-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+      <!-- ===== SHARED: chat panel ===== -->
+      <aside class="chat" data-slot="chat" data-region="chat">
+        <div class="chat__head">
+          <span class="chat__title">AI ASSISTANT</span>
+          <button class="chat__toggle" type="button" data-action="toggle-chat" aria-label="Collapse chat">›</button>
+        </div>
+        <div class="chat__body">
+          <div class="stack" data-slot="chat-messages"></div>
+        </div>
+        <div class="chat__prompts" data-slot="chat-prompts"></div>
+        <div class="chat__actions" data-slot="chat-actions"></div>
+        <form class="chat__composer" data-action="send-chat">
+          <input type="text" placeholder="Message the floor…" aria-label="Message">
+          <button class="btn btn--primary btn--sm" type="submit">Send</button>
+        </form>
+      </aside>
+  </div>
+
+  <!-- ===== SHARED TEMPLATES ===== -->
+  <template id="tpl-nav-item">
+    <a class="nav-item"><span class="nav-item__icon" data-field="icon"></span><span data-field="label"></span><span class="nav-item__badge" data-field="badge"></span></a>
+  </template>
+  <template id="tpl-role-chip">
+    <button class="role-chip" type="button"></button>
+  </template>
+  <template id="tpl-chat-message">
+    <div class="msg">
+      <span class="msg__meta" data-field="meta"></span>
+      <p class="msg__bubble" data-field="text"></p>
+    </div>
+  </template>
+  <template id="tpl-order-row">
+    <tr>
+      <td class="mono muted" data-field="seq"></td>
+      <td class="mono b" data-field="code"></td>
+      <td>
+        <span class="swatch" data-slot="line-swatch"></span>
+        <span class="mono" data-field="product"></span>
+        <span class="muted" data-field="family"></span>
+      </td>
+      <td class="mono right b" data-field="qty"></td>
+      <td><span class="swatch" data-slot="phase-swatch"></span> <span data-field="phase"></span></td>
+      <td data-field="stage"></td>
+      <td><span class="mfgday" data-slot="mfgday"></span></td>
+      <td class="mono muted" data-field="due"></td>
+      <td><span class="badge" data-field="status"></span></td>
+    </tr>
+  </template>
+  <template id="tpl-filter-chip">
+    <button class="btn btn--ghost btn--sm" type="button"></button>
+  </template>
+
+  <script src="js/data.js?v=8"></script>
+  <script src="js/util.js?v=8"></script>
+  <script src="js/store.js?v=8"></script>
+  <script src="js/components.js?v=8"></script>
+  <script src="js/page-mywork.js?v=8"></script>
+  <script src="js/notifications.js?v=8"></script>
+  <script src="js/order-detail.js?v=8"></script>
+  <script src="js/chat-cards.js?v=8"></script>
+  <script src="js/main.js?v=8"></script>
+</body>
+</html>

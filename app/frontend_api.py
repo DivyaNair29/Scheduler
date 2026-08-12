@@ -1948,18 +1948,36 @@ def api_optimizations():
       - floor    : line/order moves (from floor_insights)
       - manpower : staffing moves (from optimization_suggestions)
       - business : throughput/cost actions (from the insights 'actions')
-    Each item: {title, detail, gain}."""
-    import services
+    Each item: {id, title, detail, gain}. Items already applied/rejected (in
+    InsightDecision) are filtered out so decided suggestions don't reappear."""
+    import services, hashlib
+    def _mkid(prefix, title):
+        h = hashlib.md5((title or "").encode()).hexdigest()[:8]
+        return f"{prefix}-{h}"
+    # decided ids to exclude
+    decided = set()
+    try:
+        from models import InsightDecision
+        for d in InsightDecision.query.all():
+            decided.add(d.insight_id)
+    except Exception:
+        pass
     floor, manpower, business = [], [], []
     try:
         for i in services.floor_insights():
-            floor.append({"title": i.get("title"), "detail": i.get("detail"),
+            iid = _mkid("floor", i.get("title"))
+            if iid in decided:
+                continue
+            floor.append({"id": iid, "title": i.get("title"), "detail": i.get("detail"),
                           "gain": i.get("gain"), "ref": i.get("ref")})
     except Exception:
         pass
     try:
         for s in services.optimization_suggestions():
-            manpower.append({"title": s.get("title"), "detail": s.get("detail"),
+            iid = _mkid("manpower", s.get("title"))
+            if iid in decided:
+                continue
+            manpower.append({"id": iid, "title": s.get("title"), "detail": s.get("detail"),
                              "gain": s.get("impact") or s.get("effort")})
     except Exception:
         pass
@@ -1971,7 +1989,10 @@ def api_optimizations():
     try:
         charts = services.insight_charts(reports)
         for a in (charts.get("actions") or []):
-            business.append({"title": a.get("title"), "detail": a.get("detail"),
+            iid = _mkid("business", a.get("title"))
+            if iid in decided:
+                continue
+            business.append({"id": iid, "title": a.get("title"), "detail": a.get("detail"),
                              "gain": a.get("gain")})
     except Exception:
         pass
@@ -1979,6 +2000,58 @@ def api_optimizations():
         "floor": floor, "manpower": manpower, "business": business,
         "counts": {"floor": len(floor), "manpower": len(manpower),
                    "business": len(business)},
+    })
+
+
+@frontend_bp.get("/api/my-work")
+def api_my_work():
+    """The logged-in employee's work history + productivity summary, built from
+    their stage submissions (what they did, the shift, and whether it was
+    approved or rejected)."""
+    Order, Constraint, Confirmation, Operator, User, LogEvent, db = _models()
+    from models import StageSubmission
+    from flask import session
+    uid = session.get("user_id")
+    user = User.query.get(uid) if uid else None
+    name = user.name if user else None
+    q = StageSubmission.query
+    if name:
+        q = q.filter((StageSubmission.submitted_by == name) |
+                     (StageSubmission.submitted_by_id == uid))
+    rows = q.order_by(StageSubmission.submitted_at.desc()).limit(200).all()
+
+    def shift_of(dt):
+        if not dt:
+            return "-"
+        h = dt.hour
+        return "A" if 6 <= h < 14 else "B" if 14 <= h < 22 else "C"
+
+    items = []
+    approved = rejected = pending = 0
+    for r in rows:
+        if r.status == "approved":
+            approved += 1
+        elif r.status == "rejected":
+            rejected += 1
+        else:
+            pending += 1
+        items.append({
+            "order": r.order_code, "stage": r.stage, "status": r.status,
+            "shift": shift_of(r.submitted_at),
+            "itemsDone": r.items_done, "itemsTotal": r.items_total,
+            "submittedAt": r.submitted_at.isoformat() if r.submitted_at else None,
+            "reviewedBy": r.reviewed_by, "remarks": r.remarks,
+        })
+    total = len(rows)
+    decided = approved + rejected
+    approval_rate = round(approved / decided * 100) if decided else None
+    return jsonify({
+        "name": name,
+        "summary": {
+            "total": total, "approved": approved, "rejected": rejected,
+            "pending": pending, "approvalRate": approval_rate,
+        },
+        "items": items,
     })
 
 
@@ -2462,6 +2535,7 @@ def bootstrap():
                 {"id": "board", "label": "Schedule Board", "href": "board.html",
                  "write": True, "badgeKey": "mfgOrders", "icon": "board"},
                 {"id": "orders", "label": "Orders", "href": "orders.html",
+                 "employeeLabel": "My Work", "employeeHref": "mywork.html",
                  "badgeKey": "orders", "icon": "list"},
                 {"id": "manpower", "label": "Manpower", "href": "manpower.html",
                  "write": True, "icon": "people"},

@@ -471,3 +471,18 @@
 .sc-past-head { font-size: 10.5px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
   color: var(--muted); margin: 6px 0 8px; }
 .sc-past-wrap .sc-past { margin: 0 0 8px; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+
+/* My Work (employee productivity) */
+.mw-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.mw-card { background: var(--card); border: 1px solid var(--line); border-radius: 11px; padding: 14px 16px; }
+.mw-card__val { font-size: 26px; font-weight: 800; color: var(--ink); line-height: 1; }
+.mw-card__label { font-size: 12px; font-weight: 700; color: var(--ink-2); margin-top: 6px; }
+.mw-card__sub { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
+.mw-card.is-ok .mw-card__val { color: #1f6b46; }
+.mw-card.is-rej .mw-card__val { color: #8a3227; }
+.mw-card.is-rate .mw-card__val { color: #1f4e5f; }
+.mw-badge { font-size: 10.5px; font-weight: 800; border-radius: 5px; padding: 2px 8px; white-space: nowrap; }
+.mw-badge.is-ok { background: #e6f4ec; color: #1f6b46; }
+.mw-badge.is-rej { background: #fbe7e4; color: #8a3227; }
+.mw-badge.is-pending { background: #fdf0d6; color: #8a5a00; }
+.mw-remark { font-size: 11px; color: var(--muted); margin-top: 4px; font-style: italic; }

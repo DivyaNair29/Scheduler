@@ -60,7 +60,7 @@
       }
       items.forEach(function (item) {
         const link = MU.fromTemplate("tpl-nav-item");
-        link.href = item.href;
+        link.href = (!store.canWrite && item.employeeHref) ? item.employeeHref : item.href;
         link.dataset.nav = item.id;
         if (item.id === page) link.classList.add("is-active");
         const iconNode = link.querySelector("[data-field='icon']");
