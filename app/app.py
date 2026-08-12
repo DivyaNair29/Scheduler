@@ -141,7 +141,7 @@ def _start_nightly_rollup(app):
 # --------------------------------------------------------------------- auth
 _LOGIN_HTML = """<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sign in \u2014 AND Scheduling Assistant</title>
+<title>Sign in \u2014 AND Scheduling Optimizer</title>
 <style>
   :root{--ink:#1c2530;--muted:#6b7885;--line:#dfe5ec;--brand:#e6b34d;}
   *{box-sizing:border-box}
@@ -151,6 +151,7 @@ _LOGIN_HTML = """<!doctype html><html><head><meta charset="utf-8">
   .card{background:#fff;border-radius:14px;padding:34px 30px;width:100%;max-width:360px;
     box-shadow:0 12px 40px rgba(0,0,0,.35)}
   .brand{font-weight:800;letter-spacing:.14em;font-size:15px;color:var(--muted);margin-bottom:2px}
+  .brand-logo{height:34px;width:auto;max-width:150px;object-fit:contain;display:block;margin-bottom:10px}
   h1{font-size:19px;margin:0 0 18px}
   label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:12px 0 5px}
   input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px}
@@ -169,8 +170,8 @@ _LOGIN_HTML = """<!doctype html><html><head><meta charset="utf-8">
     border-top:1px solid var(--line);padding-top:12px}
 </style></head><body>
   <form class="card" method="post" action="/login">
-    <div class="brand">AND</div>
-    <h1>Scheduling Assistant</h1>
+    <img class="brand-logo" src="/app/img/and-logo-dark.png?v=8" alt="AND">
+    <h1>Scheduling Optimizer</h1>
     {% if error %}<div class="err">{{ error }}</div>{% endif %}
     <label>Username</label>
     <input name="username" autofocus autocomplete="username">
