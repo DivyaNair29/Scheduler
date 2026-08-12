@@ -39,7 +39,7 @@
     const logo = document.querySelector("[data-slot='brand-logo']");
     if (logo) logo.setAttribute("src", brand.logo);
     const name = document.querySelector("[data-slot='brand-name']");
-    if (name) name.textContent = brand.name;
+    if (name) name.textContent = "";   // logo image stands in for the name
     const tagline = document.querySelector("[data-slot='brand-tagline']");
     if (tagline) tagline.textContent = brand.tagline;
 

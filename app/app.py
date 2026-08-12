@@ -154,6 +154,12 @@ _LOGIN_HTML = """<!doctype html><html><head><meta charset="utf-8">
   h1{font-size:19px;margin:0 0 18px}
   label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:12px 0 5px}
   input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px}
+  .pw-wrap{position:relative}
+  .pw-wrap input{padding-right:42px}
+  .pw-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    background:none;border:0;cursor:pointer;font-size:16px;line-height:1;padding:6px;
+    width:auto;margin:0;opacity:.6}
+  .pw-toggle:hover{opacity:1;background:none}
   button{width:100%;margin-top:20px;padding:12px;border:0;border-radius:9px;background:var(--ink);
     color:#fff;font-weight:800;font-size:14px;cursor:pointer}
   button:hover{background:#2a3644}
@@ -169,10 +175,25 @@ _LOGIN_HTML = """<!doctype html><html><head><meta charset="utf-8">
     <label>Username</label>
     <input name="username" autofocus autocomplete="username">
     <label>Password</label>
-    <input name="password" type="password" autocomplete="current-password">
+    <div class="pw-wrap">
+      <input name="password" type="password" autocomplete="current-password" id="pw">
+      <button type="button" class="pw-toggle" id="pwToggle" aria-label="Show password">\U0001f441</button>
+    </div>
     <button type="submit">Sign in</button>
     {{ demo_hint|safe }}
   </form>
+  <script>
+    (function(){
+      var pw=document.getElementById('pw'), t=document.getElementById('pwToggle');
+      if(pw&&t){t.addEventListener('click',function(){
+        var show=pw.type==='password';
+        pw.type=show?'text':'password';
+        t.textContent=show?'\U0001f648':'\U0001f441';
+        t.setAttribute('aria-label',show?'Hide password':'Show password');
+        pw.focus();
+      });}
+    })();
+  </script>
 </body></html>"""
 
 

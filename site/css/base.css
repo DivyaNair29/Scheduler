@@ -346,6 +346,13 @@ textarea { width: 100%; resize: vertical; }
   font-size: 12px; text-align: left; padding: 8px 4px; cursor: pointer; border-radius: 6px;
 }
 .collapse-btn:hover { background: rgba(255,255,255,.05); color: var(--shell-text); }
+.sidebar__logout-form { margin: 0; }
+.logout-btn {
+  width: 100%; margin-top: 4px; border: 0; background: transparent; color: #7d8b99;
+  font-size: 12px; text-align: left; padding: 8px 4px; cursor: pointer; border-radius: 6px;
+  display: flex; align-items: center; gap: 7px;
+}
+.logout-btn:hover { background: rgba(224,90,80,.14); color: #f0a59c; }
 
 /* ---- nav icons ---- */
 .nav-item__icon { display: inline-flex; align-items: center; justify-content: center;
