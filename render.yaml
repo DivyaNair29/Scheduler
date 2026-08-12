@@ -1,0 +1,56 @@
+# Render blueprint for the AND Scheduling Assistant.
+#
+# This provisions a single web service with a small PERSISTENT DISK so the
+# SQLite database survives restarts and redeploys (Render's normal filesystem is
+# ephemeral and would otherwise wipe the demo data).
+#
+# To deploy: push this repo to GitHub, then in Render choose
+#   New +  ->  Blueprint  ->  pick this repo.
+# Render reads this file and creates the service. Set the secret values marked
+# sync:false in the dashboard when prompted.
+#
+# For a bigger/production setup, switch DATABASE_URL to a managed Render Postgres
+# instead of the disk (see the commented block at the bottom).
+
+services:
+  - type: web
+    name: and-scheduler
+    runtime: python
+    plan: starter            # $7/mo always-on. Use "free" to trial (sleeps after 15m idle).
+    buildCommand: pip install -r requirements.txt
+    startCommand: python render_start.py && cd app && gunicorn --workers 1 --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /login
+    disk:
+      name: scheduler-data
+      mountPath: /var/data     # the SQLite file lives here so it persists
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+      - key: DATABASE_URL
+        value: sqlite:////var/data/meridian.db   # 4 slashes = absolute path on the disk
+      - key: DEMO_MODE
+        value: "0"             # real login required. Set "1" for the no-login role-switcher.
+      - key: COOKIE_SECURE
+        value: "1"             # Render serves HTTPS, so secure cookies are safe.
+      - key: SECRET_KEY
+        generateValue: true    # Render generates a strong random secret for you.
+      - key: DEMO_PASSWORD
+        sync: false            # set your shared trial password in the dashboard.
+
+# ---------------------------------------------------------------------------
+# OPTION: managed Postgres instead of the SQLite disk (better for real load /
+# multiple workers). Remove the `disk:` block above, drop the DATABASE_URL
+# sqlite line, and uncomment below:
+#
+# databases:
+#   - name: scheduler-db
+#     plan: basic-256mb        # small managed Postgres
+#
+# then in the web service envVars add:
+#   - key: DATABASE_URL
+#     fromDatabase:
+#       name: scheduler-db
+#       property: connectionString
+#
+# With Postgres you can also raise gunicorn workers (e.g. --workers 3).
