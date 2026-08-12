@@ -68,6 +68,36 @@ class Assistant:
                 ccode = ccode.replace("C", "C-")
             return self._answer_constraint_code(ccode, constraints)
 
+        # --- analytical questions come FIRST so words like "constraint" or
+        # "how do i" don't get grabbed by the constraint/help intents below.
+        # Fires when a cause category (manpower/material/machine/quality) is named
+        # with an analytical/remedy verb, or when asking for the biggest cause.
+        cause_kw = {
+            "manpower": ("manpower", "labour", "labor", "staff", "operator",
+                         "people", "headcount", "worker", "abs.."),
+            "material": ("material", "part ", "component", "supply", "stores",
+                         "shortage", "kit"),
+            "machine": ("machine", "equipment", "breakdown", "downtime",
+                        "outage"),
+            "quality": ("quality", "rework", "defect", "scrap", "reject", "ncr"),
+        }
+        overcome_kw = ("overcome", "reduce", "fix", "improve", "address", "solve",
+                       "cut down", "lower", "minimi", "tackle", "handle",
+                       "how do i", "how can i", "what can i do", "deal with",
+                       "avoid", "prevent", "reduc", "help with")
+        analytical_kw = ("cause", "contribut", "biggest", "maximum", "most ",
+                         "top ", "main ", "gap", "why is", "why does", "why are")
+        is_remedy = any(w in q for w in overcome_kw)
+        is_analytic = any(w in q for w in analytical_kw)
+        if is_remedy or is_analytic:
+            for cause, kws in cause_kw.items():
+                if any(k in q for k in kws):
+                    return self._answer_cause_remedy(cause, schedule, constraints)
+            if any(w in q for w in ("biggest", "maximum", "most ", "top ",
+                                    "main ", "which cause", "what cause",
+                                    "contribut")):
+                return self._answer_top_cause(schedule, constraints)
+
         # high-priority / protected orders
         if (("priorit" in q or "protected" in q or "locked" in q or "vip" in q)
                 and any(w in q for w in ("which", "what", "list", "show", "any",
@@ -113,7 +143,7 @@ class Assistant:
                 "schedule, describe a disruption — e.g. 'Burn-in Chamber B2 is "
                 "down till the 24th'.", kind="help")
 
-        # --- rules couldn't route it: try the LLM, grounded in real data -----
+
         from . import llm
         if llm.available():
             snapshot = self._snapshot(schedule, constraints)
@@ -396,6 +426,102 @@ class Assistant:
             citations=[{"label": "Constraint register",
                         "detail": f"{len(constraints)} active — "
                                   + ", ".join(c.code for c in constraints)}])
+
+    def _cause_data(self):
+        """Real constraint-cause breakdown from the insights layer (live events +
+        15-year history rollup). Returns list of {label, pct} sorted desc."""
+        try:
+            import services
+            charts = services.insight_charts([])
+            return charts.get("causes", []) or []
+        except Exception:
+            return []
+
+    _CAUSE_REMEDIES = {
+        "manpower": (
+            "Manpower gap",
+            ["Cross-train a backup for any stage that has only one certified "
+             "operator — a single absence there stops the stage and is the "
+             "biggest hidden driver of manpower constraints. The skills matrix "
+             "on the Manpower tab flags these thin stages.",
+             "Redeploy idle operators: the gap is often distribution, not "
+             "headcount — one line sits idle while another is saturated. Move "
+             "idle capacity to the bottleneck line.",
+             "Balance shift staffing (A/B/C) so a thin shift isn't generating an "
+             "overnight backlog.",
+             "If those are exhausted, it's a true capacity shortfall — then the "
+             "levers are overtime / an extra shift (the 'capacity boost' "
+             "constraint), or hiring for the scarce skill."]),
+        "material": (
+            "Material shortage",
+            ["Tighten kit readiness before release — hold an order at planning "
+             "until its BOM is confirmed complete, so shortages surface before "
+             "the line, not at it.",
+             "Build safety stock / earlier reorder points for the parts that "
+             "recur in your material incidents.",
+             "Stage a second reference standard / shared consumable so one bench "
+             "isn't idled waiting on stores.",
+             "Flag long-lead components at quote time so scheduling accounts for "
+             "them up front."]),
+        "machine": (
+            "Machine / equipment",
+            ["Shift to preventive maintenance on the resources that recur in your "
+             "breakdown history, scheduled into low-load shifts rather than "
+             "reactively mid-run.",
+             "Add or qualify a backup unit for single-point resources (e.g. a "
+             "second calibration bench or burn-in chamber) so an outage reroutes "
+             "instead of halting.",
+             "Track mean-time-between-failure on the worst offenders and replace "
+             "/ refurbish the chronic ones."]),
+        "quality": (
+            "Quality / rework",
+            ["Push inspection earlier (in-process checks) so defects are caught "
+             "before value is added downstream, cutting rework loops.",
+             "Root-cause the recurring defect types from history rather than "
+             "re-working case by case.",
+             "Add a verification step at the stage that generates the most NCRs."]),
+    }
+
+    def _answer_cause_remedy(self, cause, schedule, constraints) -> Answer:
+        label, remedies = self._CAUSE_REMEDIES[cause]
+        causes = self._cause_data()
+        share = next((c.get("pct") for c in causes
+                      if cause in (c.get("label", "").lower())), None)
+        head = f"{label} "
+        if share is not None:
+            head += f"accounts for about {share}% of what stops your floor"
+            top = causes[0] if causes else None
+            if top and cause in top.get("label", "").lower():
+                head += " — it's your single biggest cause"
+            head += ". "
+        else:
+            head += "is a recurring constraint on your floor. "
+        body = "\n".join(f"• {r}" for r in remedies)
+        tail = ("\n\nThese come from the Manpower Optimization dropdown on the "
+                "dashboard, which names the specific idle operators, thin stages "
+                "and shift imbalances in your live data.") if cause == "manpower" else \
+               ("\n\nThe dashboard's Optimization Suggested panel turns these into "
+                "specific moves against your live data.")
+        return Answer(head + "Ways to overcome it:\n" + body + tail,
+                      kind="analysis",
+                      citations=[{"label": "Constraint-cause analysis",
+                                  "detail": "live events + 15-year incident history rollup"}])
+
+    def _answer_top_cause(self, schedule, constraints) -> Answer:
+        causes = self._cause_data()
+        if not causes:
+            return self._answer_constraints(constraints)
+        top = causes[0]
+        lbl = top.get("label", "").lower()
+        for cause in self._CAUSE_REMEDIES:
+            if cause in lbl:
+                return self._answer_cause_remedy(cause, schedule, constraints)
+        # top cause has no mapped remedy — still report the ranking
+        ranking = "\n".join(f"• {c.get('label')}: {c.get('pct')}%" for c in causes[:4])
+        return Answer("Your constraint causes, most to least:\n" + ranking,
+                      kind="analysis",
+                      citations=[{"label": "Constraint-cause analysis",
+                                  "detail": "live events + 15-year incident history rollup"}])
 
     def _answer_suggestions(self, schedule: Schedule) -> Answer:
         sugs = _suggestions.generate(schedule, self.now)

@@ -341,8 +341,12 @@
               else node.appendChild(card);
             }
           }
-          // citations, if the answer carries sources
-          if (message.from === "ai" && message.data && message.data.citations &&
+          // Sources are intentionally hidden for now. The assistant still
+          // carries citations in message.data.citations; flip SHOW_SOURCES to
+          // true once real data makes the sources meaningful to show.
+          var SHOW_SOURCES = false;
+          if (SHOW_SOURCES &&
+              message.from === "ai" && message.data && message.data.citations &&
               message.data.citations.length && window.MChatCards &&
               window.MChatCards.citations) {
             var cite = window.MChatCards.citations(message.data.citations);
