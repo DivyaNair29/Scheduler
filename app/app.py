@@ -231,8 +231,16 @@ def register_pages(app):
 
     @app.get("/")
     def dashboard():
+        # the real application is the single-page UI served at /app/. The old
+        # server-rendered dashboard below is legacy; send users into the SPA.
+        if current_user() is None and not app.config.get("DEMO_MODE", True):
+            return redirect(url_for("login"))
+        return redirect("/app/")
+
+    @app.get("/_legacy")
+    def dashboard_legacy():
         user = current_user()
-        if not user.can_write:
+        if not user or not user.can_write:
             return redirect(url_for("employee_dashboard"))
         columns = []
         for key, label in PHASE_LABELS:
@@ -487,8 +495,7 @@ def register_pages(app):
             abort(403, "Role switching is disabled. Please log in.")
         user = User.query.get_or_404(user_id)
         session["user_id"] = user.id
-        return redirect(url_for("dashboard" if user.can_write
-                                else "employee_dashboard"))
+        return redirect("/app/")
 
     @app.route("/login", methods=["GET", "POST"])
     def login():
@@ -500,8 +507,7 @@ def register_pages(app):
             if user and user.check_password(password):
                 session.clear()
                 session["user_id"] = user.id
-                return redirect(url_for("dashboard" if user.can_write
-                                        else "employee_dashboard"))
+                return redirect("/app/")
             error = "Incorrect username or password."
         # simple inline login page (no template dependency)
         demo_hint = ""
