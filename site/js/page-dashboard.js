@@ -69,10 +69,6 @@
     MU.render("[data-slot='approvals']",
       approvalCards.length ? approvalCards : [MU.empty("Nothing needs your approval.")]);
 
-    // Manpower attention — recent absence / reassignment activity the head
-    // should see alongside approvals.
-    renderManpowerAttention(store, approvalCards.length);
-
     // alert count badge (only approvals awaiting action)
     var alertCountEl = document.querySelector("[data-slot='alert-count']");
     if (alertCountEl) alertCountEl.textContent = approvalCards.length ? approvalCards.length : "";
@@ -90,29 +86,6 @@
           return row;
         })
       : [MU.empty("No dispatches scheduled today.")]);
-  }
-
-  function renderManpowerAttention(store, hasApprovals) {
-    var host = document.querySelector("[data-slot='approvals']");
-    if (!host || !store.canWrite) return;
-    fetch("/api/manpower/attention").then(function (r) { return r.json(); })
-      .then(function (items) {
-        if (!items || !items.length) return;
-        // if there were no approvals, clear the "nothing needs approval" empty state
-        if (!hasApprovals) host.innerHTML = "";
-        var wrap = document.createElement("div");
-        wrap.className = "mp-attention";
-        wrap.innerHTML = '<div class="mp-attention__head">MANPOWER \u00b7 recent</div>' +
-          items.map(function (it) {
-            var icon = it.kind === "assignment" ? "\uD83D\uDCCB" :
-              (/absent|out|unavailable/i.test(it.title) ? "\uD83D\uDEAB" : "\u21BA");
-            return '<div class="mp-att-item"><span class="mp-att-ico">' + icon + "</span>" +
-              '<div class="mp-att-body"><div class="mp-att-title">' + (it.title || "") + "</div>" +
-              '<div class="mp-att-detail">' + (it.detail || "") + "</div>" +
-              '<div class="mp-att-meta">' + (it.by || "") + " \u00b7 " + (it.ago || "") + "</div></div></div>";
-          }).join("");
-        host.appendChild(wrap);
-      }).catch(function () {});
   }
 
   function renderOptimizations() {

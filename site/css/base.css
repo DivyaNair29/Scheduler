@@ -117,6 +117,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 .sidebar:hover .nav-group, .sidebar:hover .sidebar__foot,
 .sidebar:focus-within .nav-item [data-field="label"] { opacity: 1; }
 .sidebar:not(:hover) .nav-group, .sidebar:not(:hover) .sidebar__foot { height: 0; padding: 0; margin: 0; overflow: hidden; }
+/* when collapsed, the brand text must not reserve vertical space, or it pushes
+   the nav icons down out of alignment. */
+.sidebar:not(:hover) .sidebar__brand-text { width: 0; height: 0; overflow: hidden; }
+.sidebar:not(:hover) .sidebar__brand { padding: 6px 0 14px; justify-content: center; }
 .sidebar:not(:hover) .nav-item { justify-content: center; padding: 9px 0; gap: 0; }
 .sidebar:not(:hover) .nav-item [data-field="label"],
 .sidebar:not(:hover) .nav-item__badge { width: 0; overflow: hidden; }
