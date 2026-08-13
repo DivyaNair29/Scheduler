@@ -69,6 +69,10 @@
     MU.render("[data-slot='approvals']",
       approvalCards.length ? approvalCards : [MU.empty("Nothing needs your approval.")]);
 
+    // pending stage submissions (incl. redone rework the employee sent) also
+    // need the head's approval — surface them in Alerts with approve/reject.
+    renderPendingStageApprovals(store);
+
     // alert count badge (only approvals awaiting action)
     var alertCountEl = document.querySelector("[data-slot='alert-count']");
     if (alertCountEl) alertCountEl.textContent = approvalCards.length ? approvalCards.length : "";
@@ -120,6 +124,79 @@
       });
   }
 
+  function renderPendingStageApprovals(store) {
+    var host = document.querySelector("[data-slot='approvals']");
+    if (!host) return;
+    var canWrite = false;
+    try { canWrite = !!(window.MStore && window.MStore.canWrite); } catch (e) {}
+    if (!canWrite) return;
+    fetch("/api/stage/submissions?status=submitted").then(function (r) { return r.json(); })
+      .then(function (d) {
+        var subs = (d && d.submissions) || [];
+        if (!subs.length) return;
+        // clear the "nothing needs approval" empty state if it's the only thing
+        var empty = host.querySelector(".empty, .muted");
+        if (empty && host.children.length === 1) host.innerHTML = "";
+        var alertCountEl = document.querySelector("[data-slot='alert-count']");
+        if (alertCountEl) {
+          var cur = parseInt(alertCountEl.textContent, 10) || 0;
+          alertCountEl.textContent = cur + subs.length;
+        }
+        var wrap = document.createElement("div");
+        wrap.className = "stagesub-wrap";
+        wrap.innerHTML = subs.map(function (s) {
+          var isRework = /rework/i.test(s.note || "");
+          return '<div class="stagesub" data-id="' + s.id + '">' +
+            '<div class="stagesub__head">' +
+              '<span class="stagesub__tag">' + (isRework ? "REWORK" : "STAGE") + " \u00b7 approval</span>" +
+              '<span class="stagesub__by">' + (s.submittedBy || "") + "</span>" +
+            "</div>" +
+            '<div class="stagesub__title">' + s.order + " \u00b7 " + s.stage + "</div>" +
+            '<div class="stagesub__actions">' +
+              '<button class="stagesub__btn stagesub__btn--ok" data-act="approve">\u2713 Approve</button>' +
+              '<button class="stagesub__btn stagesub__btn--rej" data-act="reject">Reject</button>' +
+              '<input class="stagesub__remark" placeholder="remark (to reject)">' +
+              '<span class="stagesub__msg"></span>' +
+            "</div></div>";
+        }).join("");
+        host.appendChild(wrap);
+        wireStageApprovals(wrap, store);
+      }).catch(function () {});
+  }
+
+  function wireStageApprovals(wrap, store) {
+    wrap.querySelectorAll(".stagesub").forEach(function (box) {
+      var id = box.getAttribute("data-id");
+      var remark = box.querySelector(".stagesub__remark");
+      var msg = box.querySelector(".stagesub__msg");
+      box.querySelectorAll(".stagesub__btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var approve = btn.getAttribute("data-act") === "approve";
+          var remarks = (remark.value || "").trim();
+          if (!approve && !remarks) { msg.textContent = "Add a remark to reject."; remark.focus(); return; }
+          box.querySelectorAll("button").forEach(function (b) { b.disabled = true; });
+          msg.textContent = "Saving…";
+          var by = "";
+          try { by = store.user.name; } catch (e) {}
+          var url = approve ? "/api/stage/approve" : "/api/stage/reject";
+          fetch(url, { method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: parseInt(id, 10), by: by, remarks: remarks }) })
+            .then(function (r) { return r.json(); }).then(function (res) {
+              if (res && res.ok) {
+                box.innerHTML = '<div class="stagesub__done ' + (approve ? "is-ok" : "is-rej") + '">' +
+                  (approve ? "\u2713 Approved" : "\u2715 Rejected") +
+                  (remarks ? ' \u00b7 "' + remarks + '"' : "") + "</div>";
+              } else {
+                msg.textContent = (res && res.error) || "Could not save.";
+                box.querySelectorAll("button").forEach(function (b) { b.disabled = false; });
+              }
+            }).catch(function () { msg.textContent = "Network error.";
+              box.querySelectorAll("button").forEach(function (b) { b.disabled = false; }); });
+        });
+      });
+    });
+  }
+
   function renderRework(store) {
     var host = document.querySelector("[data-slot='rework-list']");
     if (!host) return;
@@ -134,17 +211,52 @@
         }
         if (section) section.hidden = false;
         host.innerHTML = list.map(function (o) {
-          return '<div class="rw-item">' +
-            '<div class="rw-item__head">' +
-              '<span class="rw-item__code">' + o.code + "</span>" +
-              '<span class="rw-item__prod">' + (o.product || "") + " \u00b7 " + (o.line || "") + "</span>" +
-              '<span class="rw-item__stage">Rework at ' + (o.reworkStage || o.currentStage || "?") + "</span>" +
+          var stage = o.reworkStage || o.currentStage || "?";
+          return '<div class="rwh-item" data-code="' + o.code + '" data-stage="' + stage + '">' +
+            '<div class="rwh-item__main">' +
+              '<span class="rwh-item__code">' + o.code + "</span>" +
+              '<span class="rwh-item__prod">' + (o.product || "") + " \u00b7 " + (o.line || "") + "</span>" +
+              '<span class="rwh-item__stage">Rework at ' + stage + "</span>" +
             "</div>" +
-            '<div class="rw-item__reason">' + (o.reason || "") + "</div>" +
-            "</div>";
+            (o.reason ? '<div class="rwh-item__reason">' + o.reason + "</div>" : "") +
+            '<div class="rwh-item__actions">' +
+              '<button class="rwh-btn" data-act="send">\u2192 Send stage for approval</button>' +
+              '<span class="rwh-msg"></span>' +
+            "</div></div>";
         }).join("");
+        wireReworkSend(host, store);
       })
       .catch(function () { host.innerHTML = ""; });
+  }
+
+  function wireReworkSend(host, store) {
+    host.querySelectorAll(".rwh-item").forEach(function (item) {
+      var code = item.getAttribute("data-code");
+      var stage = item.getAttribute("data-stage");
+      var btn = item.querySelector("[data-act='send']");
+      var msg = item.querySelector(".rwh-msg");
+      if (!btn) return;
+      btn.addEventListener("click", function () {
+        btn.disabled = true;
+        msg.textContent = "Sending…";
+        var by = "", byId = null;
+        try { by = store.user.name; byId = store.user.id; } catch (e) {}
+        fetch("/api/stage/submit", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ order: code, stage: stage, by: by, byId: byId,
+                                 itemsDone: 1, itemsTotal: 1,
+                                 note: "Rework redone — submitted for approval" }),
+        }).then(function (r) { return r.json(); }).then(function (res) {
+          if (res && (res.ok || res.id)) {
+            item.querySelector(".rwh-item__actions").innerHTML =
+              '<span class="rwh-sent">\u2713 Sent for approval</span>';
+          } else {
+            msg.textContent = (res && res.error) || "Could not send.";
+            btn.disabled = false;
+          }
+        }).catch(function () { msg.textContent = "Network error."; btn.disabled = false; });
+      });
+    });
   }
 
   function renderEmployeeNotifications(store) {

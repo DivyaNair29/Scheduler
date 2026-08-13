@@ -473,15 +473,21 @@
 .sc-past-wrap .sc-past { margin: 0 0 8px; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
 
 /* My Work (employee productivity) */
-.mw-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 18px; }
-.mw-card { background: var(--card); border: 1px solid var(--line); border-radius: 11px; padding: 14px 16px; }
-.mw-card__val { font-size: 26px; font-weight: 800; color: var(--ink); line-height: 1; }
-.mw-card__label { font-size: 12px; font-weight: 700; color: var(--ink-2); margin-top: 6px; }
-.mw-card__sub { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
+.mw-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 22px; }
+.mw-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 18px; position: relative; overflow: hidden; box-shadow: 0 1px 2px rgba(20,30,45,.04); }
+.mw-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #c9d4e0; }
+.mw-card.is-ok::before { background: #2f9e63; }
+.mw-card.is-rej::before { background: #c0453b; }
+.mw-card.is-rate::before { background: #1f4e5f; }
+.mw-card__val { font-size: 30px; font-weight: 800; color: var(--ink); line-height: 1; letter-spacing: -.01em; }
+.mw-card__label { font-size: 12.5px; font-weight: 700; color: var(--ink-2); margin-top: 8px; }
+.mw-card__sub { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
 .mw-card.is-ok .mw-card__val { color: #1f6b46; }
 .mw-card.is-rej .mw-card__val { color: #8a3227; }
 .mw-card.is-rate .mw-card__val { color: #1f4e5f; }
-.mw-badge { font-size: 10.5px; font-weight: 800; border-radius: 5px; padding: 2px 8px; white-space: nowrap; }
+.mw-badge { display: inline-block; font-size: 10.5px; font-weight: 800; border-radius: 6px;
+  padding: 3px 9px; white-space: nowrap; letter-spacing: .02em; }
 .mw-badge.is-ok { background: #e6f4ec; color: #1f6b46; }
 .mw-badge.is-rej { background: #fbe7e4; color: #8a3227; }
 .mw-badge.is-pending { background: #fdf0d6; color: #8a5a00; }
