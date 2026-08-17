@@ -94,12 +94,37 @@ def seed():
     # Most orders got an update in the last shift; a few haven't been touched in
     # a couple of days so the "stale" indicator is visible in the demo.
     STALE = {"SO-1080": 2, "SO-1054": 3, "SO-1044": 2}   # code -> days since update
+
+    # The board recomputes each order's live status from projected-finish vs due.
+    # To keep a REALISTIC MIX of statuses regardless of what today's date is, we
+    # set each due date as an offset from `now` driven by the seed's intended
+    # status — rather than hardcoded calendar dates that go stale as time passes
+    # (which made every order drift to AT RISK). Offsets in DAYS from today:
+    #   comfortable future  -> ON TRACK / RUNNING / RUSH
+    #   tight / just past    -> AT RISK / HALTED / RESCHEDULED
+    #   in the past          -> DONE
+    STATUS_DUE_DAYS = {
+        "ON TRACK": 26, "RUNNING": 20, "RUSH": 4, "AT RISK": 1,
+        "HALTED": 2, "RESCHEDULED": 3, "DONE": -6,
+    }
+    def _due_for(status, code):
+        # a little per-order variety so bars don't all share one date
+        base = STATUS_DUE_DAYS.get(status, 21)
+        jitter = (sum(ord(ch) for ch in code) % 9)   # 0..8 deterministic
+        if status in ("ON TRACK", "RUNNING"):
+            base += jitter                # 20..34 days out
+        elif status == "DONE":
+            base -= (jitter % 4)
+        due_dt = now + timedelta(days=base)
+        return due_dt.strftime("%d %b")
+
     for code, product, family, lc, line, qty, phase, stage, status, due, start, dur in ORDERS:
         upd = now - timedelta(days=STALE[code]) if code in STALE else now - timedelta(minutes=18)
+        due_str = _due_for(status, code)
         db.session.add(Order(
             code=code, product=product, family=family, line_code=lc, line=line,
-            qty=qty, phase=phase, current_stage=stage, status=status, due=due,
-            promised=due, ship_ready=(stage == "Dispatch"),
+            qty=qty, phase=phase, current_stage=stage, status=status, due=due_str,
+            promised=due_str, ship_ready=(stage == "Dispatch"),
             rush=(code == "SO-1044"), update_source="erp", updated_by="ERP",
             updated_at=upd, start_min=start, duration_min=dur))
 
