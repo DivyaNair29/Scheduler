@@ -25,7 +25,10 @@
     var countHost = document.querySelector("[data-slot='mw-count']");
     if (!rowsHost) return;
     var d;
-    try { d = await fetch("/api/my-work").then(function (r) { return r.json(); }); }
+    try {
+      d = await fetch("/api/my-work?t=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { return r.json(); });
+    }
     catch (e) { rowsHost.innerHTML = '<tr><td colspan="7" class="muted">Could not load your work.</td></tr>'; return; }
 
     var s = d.summary || {};
@@ -72,4 +75,10 @@
 
   if (document.readyState !== "loading") render();
   else document.addEventListener("DOMContentLoaded", render);
+  // refresh when the user returns to this tab (e.g. after finishing a task
+  // on the checklist page), so newly-submitted work shows without a manual reload.
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") render();
+  });
+  window.addEventListener("pageshow", function (e) { if (e.persisted) render(); });
 })(window, document);
