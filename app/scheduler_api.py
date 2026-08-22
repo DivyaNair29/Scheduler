@@ -45,6 +45,33 @@ _ACTIVE: dict[str, object] = {}
 _REHYDRATED = False
 
 
+def clear_quality_holds_for_order(order_code, db=None):
+    """Remove any active QUALITY_HOLD constraint tied to an order, so releasing
+    the hold actually lets the engine stop halting it (otherwise the board keeps
+    recomputing the order back to HALTED from the lingering constraint)."""
+    from engine.domain import ConstraintType
+    _ensure_rehydrated()
+    removed = []
+    for code, c in list(_ACTIVE.items()):
+        if (getattr(c, "ctype", None) is ConstraintType.QUALITY_HOLD
+                and getattr(c, "order_code", None) == order_code):
+            _ACTIVE.pop(code, None)
+            removed.append(code)
+    # also close them in the DB so a rehydrate/restart doesn't bring them back
+    if removed:
+        try:
+            from models import Constraint as ConstraintModel
+            for code in removed:
+                row = ConstraintModel.query.filter_by(code=code).first()
+                if row:
+                    row.status = "resolved"
+            if db is not None:
+                db.session.commit()
+        except Exception:
+            pass
+    return removed
+
+
 def _ctype_to_str(ctype):
     """Engine ConstraintType enum -> the human label stored in Constraint.ctype."""
     try:

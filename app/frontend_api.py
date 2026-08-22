@@ -990,6 +990,13 @@ def order_quality(code):
         row.qhold = False; row.held = False; row.qhold_reason = None
         row.rework_stage = None
         row.status = "RUNNING"
+        # also clear any active QUALITY_HOLD constraint on this order, otherwise
+        # the scheduling engine keeps re-halting it and the board stays red.
+        try:
+            from scheduler_api import clear_quality_holds_for_order
+            clear_quality_holds_for_order(code, db)
+        except Exception:
+            pass
         log_event("quality", f"{code} released from quality hold",
                   "Passed re-inspection; back into flow.", actor=by, role=role)
     elif action == "rework":
